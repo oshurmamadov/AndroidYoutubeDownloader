@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String STREAM_URL = "6t7glvl6rwU";
     private static final String VIDEO_INFO_URL = "http://www.youtube.com/get_video_info?video_id=";
 
+    private boolean unicodedStreamLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +29,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.load_stream).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                unicodedStreamLoaded = false;
                 new Loader().execute();
             }
         });
     }
 
-    private void loadStreamInfo(){
+    private String loadStreamInfo(){
         BufferedInputStream bufferedInputStream = null;
+        String result = "";
         try {
             URL url = new URL(VIDEO_INFO_URL + STREAM_URL);
 
@@ -52,30 +55,37 @@ public class MainActivity extends AppCompatActivity {
             String encodedStreamURL = "";
             for(String item : array){
                 if(item.contains("url_encoded_fmt_stream_map"))
-                    encodedStreamURL = item;
+                    encodedStreamURL = item.split("=").length >= 2 ? item.split("=")[1] : "";
             }
 
-            if(encodedStreamURL.length() == 0) {
-                loadStreamInfo();
-            }
-
-            Log.e("YOYO","--->" + encodedStreamURL);
-
-
+            result = encodedStreamURL;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return result;
     }
 
 
-    class Loader extends AsyncTask<Void,Void,Void>{
+    class Loader extends AsyncTask<Void,Void,String>{
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {
+            String result = "";
 
-            loadStreamInfo();
+            while(!unicodedStreamLoaded){
+                result = loadStreamInfo();
+                if(result.length() > 0)
+                    unicodedStreamLoaded = true;
+            }
 
-            return null;
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.e("YOYO",s);
         }
     }
 }
