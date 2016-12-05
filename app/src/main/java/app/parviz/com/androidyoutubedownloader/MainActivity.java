@@ -11,8 +11,10 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,23 +41,32 @@ public class MainActivity extends AppCompatActivity {
         BufferedInputStream bufferedInputStream = null;
         String result = "";
         try {
+            System.setProperty("http.keepAlive", "false");
+
             URL url = new URL(VIDEO_INFO_URL + STREAM_URL);
 
             bufferedInputStream = new BufferedInputStream(url.openStream());
 
-            byte[] buffer = new byte[5 * 1024];
+//            byte[] buffer = new byte[5 * 1024];
+//            int count = bufferedInputStream.read(buffer);
+//            String info = new String(buffer, 0, 5 * 1024);
+//            bufferedInputStream.close();
 
-            int count = bufferedInputStream.read(buffer);
+            int ch;
+            StringBuilder builder = new StringBuilder();
+            while( (ch = bufferedInputStream.read()) != -1 ){
+                builder.append((char)ch);
+            }
 
-            String info = new String(buffer, 0, 5 * 1024);
-            bufferedInputStream.close();
-
-            String[] array = info.split("&");
+            String[] array = builder.toString().split("&");
 
             String encodedStreamURL = "";
             for(String item : array){
-                if(item.contains("url_encoded_fmt_stream_map"))
+                if(item.contains("url_encoded_fmt_stream_map")) {
+                    Log.e("YOYO",item);
                     encodedStreamURL = item.split("=").length >= 2 ? item.split("=")[1] : "";
+                }
+
             }
 
             result = encodedStreamURL;
@@ -72,6 +83,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             String result = "";
+
+            Log.e("YOYO","loading encoded stream url...");
 
             while(!unicodedStreamLoaded){
                 result = loadStreamInfo();
