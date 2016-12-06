@@ -11,10 +11,14 @@ import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,7 +102,30 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            Log.e("YOYO",s);
+            Log.e("YOYO","encoded_url --> " + s);
+            String decodedURL = decodeURIComponent(s);
+            Log.e("YOYO","decoded_url --> " + decodedURL);
+
+            String[] arr = decodedURL.split(",");
+            ArrayList<String[]> formedResult = new ArrayList<>();
+            for(String str : arr){
+                formedResult.add(str.split("&"));
+            }
+
+            Log.e("YOYO","decoded_url --> " + formedResult.toString());
         }
     }
+
+    private String decodeURIComponent(String url){
+        String result = null;
+        if(url == null || url.length() == 0) return null;
+        try{
+            result = URLDecoder.decode(url,"UTF-8");
+        }catch (UnsupportedEncodingException exc){
+            result = url;
+        }
+        return result;
+    }
+
+
 }
