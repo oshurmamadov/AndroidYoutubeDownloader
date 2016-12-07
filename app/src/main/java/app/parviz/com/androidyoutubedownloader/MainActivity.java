@@ -5,6 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -20,6 +25,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import static java.security.AccessController.getContext;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String STREAM_URL = "6t7glvl6rwU";
@@ -27,10 +34,18 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean unicodedStreamLoaded = false;
 
+    private Spinner qualitySpinner;
+    private Button downloadStreamButton;
+    private TextView downloadStreamURL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        qualitySpinner = (Spinner) findViewById(R.id.video_quality_spinner);
+        downloadStreamButton = (Button) findViewById(R.id.download_video_stream);
+        downloadStreamURL = (TextView) findViewById(R.id.download_url);
 
         findViewById(R.id.load_stream).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 formedResult.add(str.split("&"));
             }
 
-            Log.e("YOYO","decoded_url --> " + formedResult.toString());
+            fillSpinnerData(formedResult);
         }
     }
 
@@ -127,5 +142,58 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
+    private void fillSpinnerData(final ArrayList<String[]> data){
+
+        if(data == null || data.size() == 0)
+            return;
+
+        qualitySpinner.setVisibility(View.VISIBLE);
+
+        final ArrayList<String> mappedQuality = getValueByKey(data,"quality=");
+        final ArrayList<String> mappedType = getValueByKey(data,"type=");
+        final ArrayList<String> mappedResult = new ArrayList<>();
+
+        for(int i = 0; i < mappedQuality.size(); i++){
+            String type = mappedType.get(i)
+                    .replaceAll("\\%2F", "/")
+                    .replaceAll("\\%3B", ";")
+                    .replaceAll("\\%20", "\"")
+                    .split(";")[0];
+            if(!mappedResult.contains(mappedQuality.get(i) + " : " +type))
+                mappedResult.add(mappedQuality.get(i) + " : " + type);
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(),android.R.layout.simple_spinner_item,mappedResult);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        qualitySpinner.setAdapter(adapter);
+
+        qualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                final ArrayList<String> mappedURL = getValueByKey(data,"url=");
+                downloadStreamURL.setVisibility(View.VISIBLE);
+                downloadStreamButton.setVisibility(View.VISIBLE);
+                downloadStreamURL.setText(mappedURL.get(i));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private ArrayList<String> getValueByKey(ArrayList<String[]> data,String key){
+        final ArrayList<String> mapped = new ArrayList<>();
+        for(String[] array : data){
+            for(String str: array){
+                if(str.contains(key))
+                    if(str.split("=").length >= 2)
+                        mapped.add(str.split("=")[1]);
+            }
+        }
+
+        return mapped;
+    }
 
 }
