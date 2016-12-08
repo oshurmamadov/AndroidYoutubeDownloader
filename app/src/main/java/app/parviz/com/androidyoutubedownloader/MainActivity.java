@@ -1,6 +1,7 @@
 package app.parviz.com.androidyoutubedownloader;
 
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStream;
@@ -52,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 unicodedStreamLoaded = false;
                 new Loader().execute();
+            }
+        });
+
+        downloadStreamButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
             }
         });
     }
@@ -121,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
             String decodedURL = decodeURIComponent(s);
             Log.e("YOYO","decoded_url --> " + decodedURL);
 
+
+            if(decodedURL == null) Toast.makeText(getApplicationContext(),"Got nothing to show",Toast.LENGTH_SHORT).show();
+
             String[] arr = decodedURL.split(",");
             ArrayList<String[]> formedResult = new ArrayList<>();
             for(String str : arr){
@@ -173,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 final ArrayList<String> mappedURL = getValueByKey(data,"url=");
                 downloadStreamURL.setVisibility(View.VISIBLE);
                 downloadStreamButton.setVisibility(View.VISIBLE);
-                downloadStreamURL.setText(mappedURL.get(i));
+                downloadStreamURL.setText(decodeURIComponent(mappedURL.get(i)));
             }
 
             @Override
@@ -194,6 +207,68 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return mapped;
+    }
+
+    private File getOutputMediaFile(){
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MOVIES), "YouTubeDownloader");
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("YOYO", "failed to create directory");
+                return null;
+            }
+        }
+
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator + "астанавитесь" + ".mp4");
+
+        return mediaFile;
+    }
+
+    private void downloadVideoStream(String url){
+        try {
+
+            BufferedInputStream in = null;
+            FileOutputStream fout = null;
+
+            File mFile = getOutputMediaFile();
+
+            if(mFile == null) return;
+
+            try {
+                in = new BufferedInputStream(new URL(url).openStream());
+                fout = new FileOutputStream(mFile);
+
+                final byte data[] = new byte[5 * 1024];
+                int count;
+                while ((count = in.read(data, 0, 5 * 1024)) != -1) {
+                    fout.write(data, 0, count);
+                }
+            } finally {
+                if (in != null) {
+                    in.close();
+                }
+                if (fout != null) {
+                    fout.close();
+                }
+            }
+        }catch (Exception e){ e.printStackTrace(); }
+    }
+
+    class YoutubeDownloader extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            downloadVideoStream(strings[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(getApplicationContext(),"Yay ! Done !", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
