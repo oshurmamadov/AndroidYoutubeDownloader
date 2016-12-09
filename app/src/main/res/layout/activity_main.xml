@@ -15,11 +15,22 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin">
 
+
+            <EditText
+                android:id="@+id/address_box"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/load_stream"
+                android:layout_toStartOf="@+id/load_stream"
+                android:text="6t7glvl6rwU"/>
+
             <Button
                 android:id="@+id/load_stream"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LOAD"/>
+                android:text="LOAD"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"/>
 
             <Spinner
                 android:id="@+id/video_quality_spinner"

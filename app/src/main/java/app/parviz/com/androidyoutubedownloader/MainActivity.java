@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String STREAM_URL = "6t7glvl6rwU";
+    private  String STREAM_URL = "";
     private static final String VIDEO_INFO_URL = "http://www.youtube.com/get_video_info?video_id=";
 
     private boolean unicodedStreamLoaded = false;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner qualitySpinner;
     private Button downloadStreamButton;
     private TextView downloadStreamURL;
+    private EditText addressBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         qualitySpinner = (Spinner) findViewById(R.id.video_quality_spinner);
         downloadStreamButton = (Button) findViewById(R.id.download_video_stream);
         downloadStreamURL = (TextView) findViewById(R.id.download_url);
+        addressBox = (EditText) findViewById(R.id.address_box);
 
         findViewById(R.id.load_stream).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                 new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
             }
         });
+
+        STREAM_URL = addressBox.getText().toString();
     }
 
     private String loadStreamInfo(){
@@ -115,8 +120,11 @@ public class MainActivity extends AppCompatActivity {
 
             Log.e("YOYO","loading encoded stream url...");
 
-            while(!unicodedStreamLoaded){
+            int counter = 0;
+
+            while(!unicodedStreamLoaded && counter < 10){
                 result = loadStreamInfo();
+                counter ++;
                 if(result.length() > 0)
                     unicodedStreamLoaded = true;
             }
@@ -127,6 +135,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            if(s.length() == 0) {
+                Toast.makeText(getApplicationContext(),"Some problems with connection", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Log.e("YOYO","encoded_url --> " + s);
             String decodedURL = decodeURIComponent(s);
             Log.e("YOYO","decoded_url --> " + decodedURL);
@@ -226,7 +240,8 @@ public class MainActivity extends AppCompatActivity {
         return mediaFile;
     }
 
-    private void downloadVideoStream(String url){
+    private boolean downloadVideoStream(String url){
+        boolean status = false;
         try {
 
             BufferedInputStream in = null;
@@ -234,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
             File mFile = getOutputMediaFile();
 
-            if(mFile == null) return;
+            if(mFile == null) return status;
 
             try {
                 in = new BufferedInputStream(new URL(url).openStream());
@@ -245,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
                 while ((count = in.read(data, 0, 5 * 1024)) != -1) {
                     fout.write(data, 0, count);
                 }
+                status = true;
             } finally {
                 if (in != null) {
                     in.close();
@@ -253,21 +269,28 @@ public class MainActivity extends AppCompatActivity {
                     fout.close();
                 }
             }
-        }catch (Exception e){ e.printStackTrace(); }
+        }catch (Exception e){
+            e.printStackTrace();
+            status = false;
+        }
+
+        return status;
     }
 
-    class YoutubeDownloader extends AsyncTask<String,Void,Void>{
+    class YoutubeDownloader extends AsyncTask<String,Void,Boolean>{
 
         @Override
-        protected Void doInBackground(String... strings) {
-            downloadVideoStream(strings[0]);
-            return null;
+        protected Boolean doInBackground(String... strings) {
+            return downloadVideoStream(strings[0]);
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Toast.makeText(getApplicationContext(),"Yay ! Done !", Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(Boolean status) {
+            super.onPostExecute(status);
+            if(status)
+                Toast.makeText(getApplicationContext(),"Yay ! Done !", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getApplicationContext(),"Crap ! Something went wrong !", Toast.LENGTH_SHORT).show();
         }
     }
 
