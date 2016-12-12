@@ -27,6 +27,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 
 import static java.security.AccessController.getContext;
@@ -247,19 +249,38 @@ public class MainActivity extends AppCompatActivity {
             BufferedInputStream in = null;
             FileOutputStream fout = null;
 
+            HttpURLConnection connection = null;
+
             File mFile = getOutputMediaFile();
 
             if(mFile == null) return status;
 
             try {
-                in = new BufferedInputStream(new URL(url).openStream());
+
+                connection = null;
+                connection = (HttpURLConnection) (new URL(url)).openConnection();
+
+                connection.setRequestMethod("HEAD");
+                connection.connect();
+
+                int length = connection.getContentLength();
+
+                in = new BufferedInputStream(connection.getInputStream());
                 fout = new FileOutputStream(mFile);
 
-                final byte data[] = new byte[5 * 1024];
-                int count;
-                while ((count = in.read(data, 0, 5 * 1024)) != -1) {
-                    fout.write(data, 0, count);
-                }
+                //length = length / 2;
+
+//                final byte data[] = new byte[length];
+//                int count;
+//                while ((count = in.read(data, 0, data.length)) != -1) {
+//                    fout.write(data, 0, count);
+//                }
+
+
+                ReadableByteChannel rbc = Channels.newChannel(connection.getInputStream());
+                fout.getChannel().transferFrom(rbc, 0, length);
+
+
                 status = true;
             } finally {
                 if (in != null) {
@@ -268,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
                 if (fout != null) {
                     fout.close();
                 }
+                connection.disconnect();
             }
         }catch (Exception e){
             e.printStackTrace();
