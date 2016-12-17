@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
             fillSpinnerData(formedResult);
 
+
             progressWrapper.setVisibility(View.GONE);
         }
     }
@@ -205,13 +206,13 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         qualitySpinner.setAdapter(adapter);
 
+        qualitySpinner.setSelection(mappedResult.size() - 1);
+        setSpinnerSelection(mappedResult.size() - 1,data);
+
         qualitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                final ArrayList<String> mappedURL = getValueByKey(data,"url=");
-                downloadStreamURL.setVisibility(View.VISIBLE);
-                downloadStreamButton.setVisibility(View.VISIBLE);
-                downloadStreamURL.setText(decodeURIComponent(mappedURL.get(i)));
+               setSpinnerSelection(i,data);
             }
 
             @Override
@@ -219,6 +220,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setSpinnerSelection(int pos,ArrayList<String[]> data){
+        final ArrayList<String> mappedURL = getValueByKey(data,"url=");
+        downloadStreamURL.setVisibility(View.VISIBLE);
+        downloadStreamButton.setVisibility(View.VISIBLE);
+        downloadStreamURL.setText(decodeURIComponent(mappedURL.get(pos)));
     }
 
     private ArrayList<String> getValueByKey(ArrayList<String[]> data,String key){
@@ -270,9 +278,12 @@ public class MainActivity extends AppCompatActivity {
                 connection = (HttpURLConnection) (new URL(url)).openConnection();
 
                 connection.setRequestMethod("HEAD");
+
                 connection.connect();
 
                 int length = connection.getContentLength();
+
+                connection.setRequestProperty("Range", "bytes=0-150000");
 
                 in = new BufferedInputStream(connection.getInputStream());
                 fout = new FileOutputStream(mFile);
@@ -289,8 +300,8 @@ public class MainActivity extends AppCompatActivity {
 
                     cTest += count;
 
-                    if(cTest > length/2)
-                        break;
+                   // if(cTest > length/2)
+                   //     break;
                 }
 
                 Log.e("YOYO", " -->" + cTest + " : " + length);
