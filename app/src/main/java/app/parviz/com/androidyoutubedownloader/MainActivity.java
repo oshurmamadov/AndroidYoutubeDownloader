@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,21 +45,26 @@ public class MainActivity extends AppCompatActivity {
     private Button downloadStreamButton;
     private TextView downloadStreamURL;
     private EditText addressBox;
+    private RelativeLayout progressWrapper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         qualitySpinner = (Spinner) findViewById(R.id.video_quality_spinner);
         downloadStreamButton = (Button) findViewById(R.id.download_video_stream);
         downloadStreamURL = (TextView) findViewById(R.id.download_url);
         addressBox = (EditText) findViewById(R.id.address_box);
+        progressWrapper = (RelativeLayout) findViewById(R.id.progress_bar_wrapper);
 
         findViewById(R.id.load_stream).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 unicodedStreamLoaded = false;
+                progressWrapper.setVisibility(View.VISIBLE);
                 new Loader().execute();
             }
         });
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         downloadStreamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressWrapper.setVisibility(View.VISIBLE);
                 new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
             }
         });
@@ -157,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             fillSpinnerData(formedResult);
+
+            progressWrapper.setVisibility(View.GONE);
         }
     }
 
@@ -270,15 +279,24 @@ public class MainActivity extends AppCompatActivity {
 
                 //length = length / 2;
 
-//                final byte data[] = new byte[length];
-//                int count;
-//                while ((count = in.read(data, 0, data.length)) != -1) {
-//                    fout.write(data, 0, count);
-//                }
+                final byte data[] = new byte[length];
+                int count;
 
+                int cTest = 0;
 
-                ReadableByteChannel rbc = Channels.newChannel(connection.getInputStream());
-                fout.getChannel().transferFrom(rbc, 0, length);
+                while ((count = in.read(data, 0, data.length)) != -1  ) {
+                    fout.write(data, 0, count);
+
+                    cTest += count;
+
+                    if(cTest > length/2)
+                        break;
+                }
+
+                Log.e("YOYO", " -->" + cTest + " : " + length);
+
+//                ReadableByteChannel rbc = Channels.newChannel(connection.getInputStream());
+//                fout.getChannel().transferFrom(rbc, 0, length);
 
 
                 status = true;
@@ -313,6 +331,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Yay ! Done !", Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(getApplicationContext(),"Crap ! Something went wrong !", Toast.LENGTH_SHORT).show();
+
+            progressWrapper.setVisibility(View.GONE);
         }
     }
 
