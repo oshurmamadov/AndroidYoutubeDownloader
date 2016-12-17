@@ -48,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout progressWrapper;
 
 
+    //@TODO CHALLENGE -
+    // 1) define video length
+    // 2) calculate step : length / size
+    // 3) calc ratio between selected range in sec and step to determine byte range
+    // 4) solve metadata problem
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -278,12 +285,10 @@ public class MainActivity extends AppCompatActivity {
                 connection = (HttpURLConnection) (new URL(url)).openConnection();
 
                 connection.setRequestMethod("HEAD");
-
+                connection.setRequestProperty("Range", "bytes=0-");
                 connection.connect();
 
                 int length = connection.getContentLength();
-
-                connection.setRequestProperty("Range", "bytes=0-150000");
 
                 in = new BufferedInputStream(connection.getInputStream());
                 fout = new FileOutputStream(mFile);
