@@ -1,5 +1,7 @@
 package app.parviz.com.androidyoutubedownloader;
 
+import android.content.Context;
+import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -20,10 +22,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -31,6 +35,7 @@ import java.net.URLEncoder;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.security.AccessController.getContext;
 
@@ -268,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean downloadVideoStream(String url){
         boolean status = false;
+
         try {
 
             BufferedInputStream in = null;
@@ -281,21 +287,27 @@ public class MainActivity extends AppCompatActivity {
 
             try {
 
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                retriever.setDataSource(url, new HashMap<String, String>());
+                int videoLength = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+                int length = getVideoSize(url);
+
+                int stepSize = length / videoLength;
+
+                int minRange = 0;
+                int maxRange = 4000 * stepSize; // in milleseconds
+
                 connection = null;
                 connection = (HttpURLConnection) (new URL(url)).openConnection();
 
                 connection.setRequestMethod("HEAD");
-                connection.setRequestProperty("Range", "bytes=0-");
+                connection.setRequestProperty("Range", "bytes=" + minRange + "-" + maxRange);
                 connection.connect();
-
-                int length = connection.getContentLength();
 
                 in = new BufferedInputStream(connection.getInputStream());
                 fout = new FileOutputStream(mFile);
 
-                //length = length / 2;
-
-                final byte data[] = new byte[length];
+                final byte data[] = new byte[5 * 1024];
                 int count;
 
                 int cTest = 0;
@@ -314,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
 //                ReadableByteChannel rbc = Channels.newChannel(connection.getInputStream());
 //                fout.getChannel().transferFrom(rbc, 0, length);
 
-
                 status = true;
             } finally {
                 if (in != null) {
@@ -331,6 +342,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return status;
+    }
+
+    private int getVideoSize(String url){
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) (new URL(url)).openConnection();
+            connection.connect();
+
+            return connection.getContentLength();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            if(connection != null)
+                connection.disconnect();
+        }
+
+        return 0;
     }
 
     class YoutubeDownloader extends AsyncTask<String,Void,Boolean>{
