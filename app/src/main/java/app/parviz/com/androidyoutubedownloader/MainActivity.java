@@ -94,10 +94,10 @@ public class MainActivity extends AppCompatActivity {
                 progressWrapper.setVisibility(View.VISIBLE);
               //  new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
 
-                String[] cmd = {"ffmpeg -i "
-                        + "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"
-                        + " -ss 00:00:00 -c copy -t 00:00:04.0 "
-                        + "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
+                String[] cmd = new String[]{"ffmpeg", "-ss","00:00:00","-i",
+                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
+                        "-to","00:00:04.0", "-c", "copy"
+                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
                 executeFFMPEG(getApplicationContext(),cmd);
 
             }
