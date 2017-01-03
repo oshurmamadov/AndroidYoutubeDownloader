@@ -1,6 +1,7 @@
 package app.parviz.com.androidyoutubedownloader;
 
 import android.content.Context;
+import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -16,6 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -85,11 +92,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressWrapper.setVisibility(View.VISIBLE);
-                new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
+              //  new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
+
+                String[] cmd = {"ffmpeg -i "
+                        + "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"
+                        + " -ss 00:00:00 -c copy -t 00:00:04.0 "
+                        + "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
+                executeFFMPEG(getApplicationContext(),cmd);
+
             }
         });
 
         STREAM_URL = addressBox.getText().toString();
+
+        loadBinaryFFMPEG(getApplicationContext());
     }
 
     private String loadStreamInfo(){
@@ -329,11 +345,20 @@ public class MainActivity extends AppCompatActivity {
                 status = true;
 
 
-                MediaMetadataRetriever meta = new MediaMetadataRetriever();
-                meta.setDataSource(mFile.getAbsolutePath());
-                String llc = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//                MediaMetadataRetriever meta = new MediaMetadataRetriever();
+//                meta.setDataSource(mFile.getAbsolutePath());
+//                String llc = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+//
+//                String extractedHeight = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+//                String extractedWidth = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+//
+//                Log.e("YOYO",extractedHeight);
+//                Log.e("YOYO",extractedWidth);
 
-                String y  = "mmm";
+
+//                /storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4
+//                String[] cmd = {"ffmpeg -i " + "" + " -ss 00:00:00 -c copy  -t 00:00:04.0 " + mFile.getAbsolutePath()};
+//                executeFFMPEG(getApplicationContext(),cmd);
 
             } finally {
                 if (in != null) {
@@ -348,6 +373,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             status = false;
         }
+
+
 
         return status;
     }
@@ -386,6 +413,60 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Crap ! Something went wrong !", Toast.LENGTH_SHORT).show();
 
             progressWrapper.setVisibility(View.GONE);
+        }
+    }
+
+    public void loadBinaryFFMPEG(Context context){
+        FFmpeg ffmpeg = FFmpeg.getInstance(context);
+        try {
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+
+                @Override
+                public void onStart() {}
+
+                @Override
+                public void onFailure() {}
+
+                @Override
+                public void onSuccess() {}
+
+                @Override
+                public void onFinish() {}
+            });
+        } catch (FFmpegNotSupportedException e) {
+            // Handle if FFmpeg is not supported by device
+            e.printStackTrace();
+        }
+    }
+
+    public void executeFFMPEG(Context context,String[] cmd){
+        FFmpeg ffmpeg = FFmpeg.getInstance(context);
+        try {
+            // to execute "ffmpeg -version" command you just need to pass "-version"
+            ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
+
+                @Override
+                public void onStart() {}
+
+                @Override
+                public void onProgress(String message) {}
+
+                @Override
+                public void onFailure(String message) {
+                    Log.e("YOYO","FAILURE :" + message);
+                }
+
+                @Override
+                public void onSuccess(String message) {
+                    Log.e("YOYO",message);
+                }
+
+                @Override
+                public void onFinish() {}
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            // Handle if FFmpeg is already running
+            e.printStackTrace();
         }
     }
 
