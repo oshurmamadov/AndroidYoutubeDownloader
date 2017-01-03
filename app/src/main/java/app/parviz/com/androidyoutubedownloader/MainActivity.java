@@ -327,6 +327,14 @@ public class MainActivity extends AppCompatActivity {
 //                fout.getChannel().transferFrom(rbc, 0, length);
 
                 status = true;
+
+
+                MediaMetadataRetriever meta = new MediaMetadataRetriever();
+                meta.setDataSource(mFile.getAbsolutePath());
+                String llc = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+                String y  = "mmm";
+
             } finally {
                 if (in != null) {
                     in.close();
