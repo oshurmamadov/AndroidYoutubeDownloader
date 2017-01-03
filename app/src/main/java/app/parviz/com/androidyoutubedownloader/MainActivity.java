@@ -92,14 +92,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressWrapper.setVisibility(View.VISIBLE);
-              //  new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
+             //   new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
 
-                String[] cmd = new String[]{"ffmpeg", "-ss","00:00:00","-i",
+//                String[] cmd = new String[]{"-y","-i",
+//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
+//                         "-t","00:00:04.0", "-async", "1"
+//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
+
+                String[] cmd = new String[]{"ffmpeg","-i",
                         "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
-                        "-to","00:00:04.0", "-c", "copy"
+                        "-vf","trim=0:3"
                         , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
-                executeFFMPEG(getApplicationContext(),cmd);
 
+                executeFFMPEG(getApplicationContext(),cmd);
             }
         });
 
@@ -358,6 +363,12 @@ public class MainActivity extends AppCompatActivity {
 
 //                /storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4
 //                String[] cmd = {"ffmpeg -i " + "" + " -ss 00:00:00 -c copy  -t 00:00:04.0 " + mFile.getAbsolutePath()};
+//                executeFFMPEG(getApplicationContext(),cmd);
+
+//                String[] cmd = new String[]{"-y","-i",
+//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
+//                        "-vcodec","copy","-acodec","copy", "-t","00:00:04.0", "-strict", "-2"
+//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
 //                executeFFMPEG(getApplicationContext(),cmd);
 
             } finally {
