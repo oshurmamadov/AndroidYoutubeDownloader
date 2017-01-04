@@ -1,5 +1,6 @@
 package app.parviz.com.androidyoutubedownloader;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView downloadStreamURL;
     private EditText addressBox;
     private RelativeLayout progressWrapper;
+    private ProgressBar progressBar;
+    private ProgressDialog progress;
 
 
     //@TODO CHALLENGE -
@@ -78,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
         downloadStreamURL = (TextView) findViewById(R.id.download_url);
         addressBox = (EditText) findViewById(R.id.address_box);
         progressWrapper = (RelativeLayout) findViewById(R.id.progress_bar_wrapper);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        progress=new ProgressDialog(this);
+        progress.setMessage("Downloading Stream");
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setIndeterminate(true);
 
         findViewById(R.id.load_stream).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,20 +101,20 @@ public class MainActivity extends AppCompatActivity {
         downloadStreamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressWrapper.setVisibility(View.VISIBLE);
-             //   new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
+              //  progressWrapper.setVisibility(View.VISIBLE);
+                new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
 
 //                String[] cmd = new String[]{"-y","-i",
 //                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
 //                         "-t","00:00:04.0", "-async", "1"
 //                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
 
-                String[] cmd = new String[]{"ffmpeg","-i",
-                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
-                        "-vf","trim=0:3"
-                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
-
-                executeFFMPEG(getApplicationContext(),cmd);
+//                String[] cmd = new String[]{"ffmpeg","-i",
+//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
+//                        "-vf","trim=0:3"
+//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
+//
+//                executeFFMPEG(getApplicationContext(),cmd);
             }
         });
 
@@ -332,8 +342,16 @@ public class MainActivity extends AppCompatActivity {
                 int count;
 
                 int cTest = 0;
+                long total = 0;
+
+                progress.setMax(length);
 
                 while ((count = in.read(data, 0, data.length)) != -1  ) {
+
+                    total += count;
+                    // Publish the progress
+                    progress.setProgress((int) (total * 100 / length));
+
                     fout.write(data, 0, count);
 
                     cTest += count;
@@ -408,7 +426,15 @@ public class MainActivity extends AppCompatActivity {
         return 0;
     }
 
-    class YoutubeDownloader extends AsyncTask<String,Void,Boolean>{
+    class YoutubeDownloader extends AsyncTask<String,Integer,Boolean>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress.setProgress(0);
+            progress.setCancelable(false);
+            progress.show();
+        }
 
         @Override
         protected Boolean doInBackground(String... strings) {
@@ -423,7 +449,9 @@ public class MainActivity extends AppCompatActivity {
             else
                 Toast.makeText(getApplicationContext(),"Crap ! Something went wrong !", Toast.LENGTH_SHORT).show();
 
-            progressWrapper.setVisibility(View.GONE);
+            progress.hide();
+            progress.dismiss();
+           // progressWrapper.setVisibility(View.GONE);
         }
     }
 
