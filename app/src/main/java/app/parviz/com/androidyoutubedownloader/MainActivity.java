@@ -102,18 +102,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
               //  progressWrapper.setVisibility(View.VISIBLE);
-                new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
+ //               new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
 
 //                String[] cmd = new String[]{"-y","-i",
 //                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
 //                         "-t","00:00:04.0", "-async", "1"
 //                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
 
-//                String[] cmd = new String[]{"ffmpeg","-i",
+//                String[] cmd = new String[]{"-y","-i",
 //                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
 //                        "-vf","trim=0:3"
 //                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
+
+                String[] cmd = new String[]{"-ss","00:00:00.00","-i",
+                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
+                        "-to","00:00:03.00", "-c","copy"
+                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь1.mp4"};
 //
+                executeFFMPEG(getApplicationContext(),cmd);
+
+
+//                String[] cmd = new String[]{"-y","-i",
+//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
+//                        "-vcodec","copy","-acodec","copy", "-t","00:00:03.0", "-strict", "-2"
+//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
 //                executeFFMPEG(getApplicationContext(),cmd);
             }
         });

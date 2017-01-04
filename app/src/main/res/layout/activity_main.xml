@@ -60,7 +60,7 @@
                 android:text="DOWNLOAD STREAM"
                 android:layout_below="@id/download_url"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
