@@ -343,32 +343,25 @@ public class MainActivity extends AppCompatActivity {
                 in = new BufferedInputStream(connection.getInputStream());
                 fout = new FileOutputStream(mFile);
 
-                final byte data[] = new byte[5 * 1024];
+                final byte data[] = new byte[length];
                 int count;
 
-                int cTest = 0;
                 long total = 0;
 
-                progress.setMax(length);
+                Log.e("YOYO","content length :" + length + "");
+
+//                progress.setProgress(0);
+//                progress.setMax(length);
+//                progress.setCancelable(false);
+//                progress.show();
 
                 while ((count = in.read(data, 0, data.length)) != -1  ) {
 
                     total += count;
-                    // Publish the progress
-                    progress.setProgress((int) (total * 100 / length));
+                  //  progress.setProgress((int) (total * 100 / length));
 
                     fout.write(data, 0, count);
-
-                    cTest += count;
-
-                   // if(cTest > length/2)
-                   //     break;
                 }
-
-                Log.e("YOYO", " -->" + cTest + " : " + length);
-
-//                ReadableByteChannel rbc = Channels.newChannel(connection.getInputStream());
-//                fout.getChannel().transferFrom(rbc, 0, length);
 
                 status = true;
 
@@ -378,27 +371,6 @@ public class MainActivity extends AppCompatActivity {
                         ,mFile.getParent() + "/" + mFile.getName().replace(".mp4","") + "1" + ".mp4"};
 
                 executeFFMPEG(getApplicationContext(),cmd);
-
-//                MediaMetadataRetriever meta = new MediaMetadataRetriever();
-//                meta.setDataSource(mFile.getAbsolutePath());
-//                String llc = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-//
-//                String extractedHeight = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
-//                String extractedWidth = meta.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-//
-//                Log.e("YOYO",extractedHeight);
-//                Log.e("YOYO",extractedWidth);
-
-
-//                /storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4
-//                String[] cmd = {"ffmpeg -i " + "" + " -ss 00:00:00 -c copy  -t 00:00:04.0 " + mFile.getAbsolutePath()};
-//                executeFFMPEG(getApplicationContext(),cmd);
-
-//                String[] cmd = new String[]{"-y","-i",
-//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
-//                        "-vcodec","copy","-acodec","copy", "-t","00:00:04.0", "-strict", "-2"
-//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
-//                executeFFMPEG(getApplicationContext(),cmd);
 
             } finally {
                 if (in != null) {
@@ -442,9 +414,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progress.setProgress(0);
-            progress.setCancelable(false);
-            progress.show();
         }
 
         @Override
@@ -460,9 +429,9 @@ public class MainActivity extends AppCompatActivity {
             else
                 Toast.makeText(getApplicationContext(),"Crap ! Something went wrong !", Toast.LENGTH_SHORT).show();
 
-            progress.hide();
-            progress.dismiss();
-           // progressWrapper.setVisibility(View.GONE);
+        //    progress.hide();
+        //    progress.dismiss();
+            progressWrapper.setVisibility(View.GONE);
         }
     }
 
