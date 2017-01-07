@@ -65,12 +65,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     //@TODO CHALLENGE -
-    // 1) define video length
-    // 2) calculate step : length / size
-    // 3) calc ratio between selected range in sec and step to determine byte range
-    // 4) solve metadata problem
-    //FSJ BFD /Social year Germany
+    //1) Solve ProgressDialog problem
+    //2) Delete redundant file after trimming
+    //3) Replace hardcoded duration interval
+    //4) Create intent which can receive and handle any video from YouTube
+    //5) Play trimmed video
 
+    //FSJ BFD /Social year Germany
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,24 +103,8 @@ public class MainActivity extends AppCompatActivity {
         downloadStreamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressWrapper.setVisibility(View.VISIBLE);
+                progressWrapper.setVisibility(View.GONE);
                 new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
-
-//                String[] cmd = new String[]{"-y","-i",
-//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
-//                         "-t","00:00:04.0", "-async", "1"
-//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
-
-//                String[] cmd = new String[]{"-y","-i",
-//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
-//                        "-vf","trim=0:3"
-//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
-
-//                String[] cmd = new String[]{"-y","-i",
-//                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
-//                        "-vcodec","copy","-acodec","copy", "-t","00:00:03.0", "-strict", "-2"
-//                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
-//                executeFFMPEG(getApplicationContext(),cmd);
             }
         });
 
@@ -355,10 +340,13 @@ public class MainActivity extends AppCompatActivity {
 //                progress.setCancelable(false);
 //                progress.show();
 
+                 progress.setMax(length);
+
+
                 while ((count = in.read(data, 0, data.length)) != -1  ) {
 
                     total += count;
-                  //  progress.setProgress((int) (total * 100 / length));
+                    progress.setProgress((int) (total * 100 / length));
 
                     fout.write(data, 0, count);
                 }
@@ -414,6 +402,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            progress.setProgress(0);
+            progress.setCancelable(false);
+            progress.show();
         }
 
         @Override
@@ -429,8 +420,8 @@ public class MainActivity extends AppCompatActivity {
             else
                 Toast.makeText(getApplicationContext(),"Crap ! Something went wrong !", Toast.LENGTH_SHORT).show();
 
-        //    progress.hide();
-        //    progress.dismiss();
+            progress.hide();
+            progress.dismiss();
             progressWrapper.setVisibility(View.GONE);
         }
     }
