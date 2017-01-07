@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     // 2) calculate step : length / size
     // 3) calc ratio between selected range in sec and step to determine byte range
     // 4) solve metadata problem
+    //FSJ BFD /Social year Germany
 
 
     @Override
@@ -101,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         downloadStreamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  progressWrapper.setVisibility(View.VISIBLE);
- //               new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
+                progressWrapper.setVisibility(View.VISIBLE);
+                new YoutubeDownloader().execute(downloadStreamURL.getText().toString());
 
 //                String[] cmd = new String[]{"-y","-i",
 //                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
@@ -113,14 +114,6 @@ public class MainActivity extends AppCompatActivity {
 //                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
 //                        "-vf","trim=0:3"
 //                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4"};
-
-                String[] cmd = new String[]{"-ss","00:00:00.00","-i",
-                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4",
-                        "-to","00:00:03.00", "-c","copy"
-                        , "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь1.mp4"};
-//
-                executeFFMPEG(getApplicationContext(),cmd);
-
 
 //                String[] cmd = new String[]{"-y","-i",
 //                        "/storage/emulated/0/Movies/YouTubeDownloader/астанавитесь.mp4","-ss","00:00:00.00",
@@ -379,6 +372,12 @@ public class MainActivity extends AppCompatActivity {
 
                 status = true;
 
+                String[] cmd = new String[]{"-ss","00:00:00.00","-i",
+                        mFile.getAbsolutePath(),
+                        "-to","00:00:03.00", "-c","copy"
+                        ,mFile.getParent() + "/" + mFile.getName().replace(".mp4","") + "1" + ".mp4"};
+
+                executeFFMPEG(getApplicationContext(),cmd);
 
 //                MediaMetadataRetriever meta = new MediaMetadataRetriever();
 //                meta.setDataSource(mFile.getAbsolutePath());
