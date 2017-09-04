@@ -1,4 +1,4 @@
-package app.parviz.com.androidyoutubedownloader;
+package app.parviz.com.simpleyoutubedownloader;
 
 import org.junit.Test;
 

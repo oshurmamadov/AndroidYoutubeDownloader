@@ -1,4 +1,4 @@
-package app.parviz.com.androidyoutubedownloader;
+package app.parviz.com.simpleyoutubedownloader;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
