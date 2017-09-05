@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progress.setIndeterminate(true);
 
+        // 1 step : get provided youtube URL info and try to decode it loadStreamInfo()
+        // The idea is to get video URL and sent it to VIDEO_INFO_URL retrieve the encoded row [url_encoded_fmt_stream_map]
+        // and try to decode with URLDecoder[UTF format] , then format the string so we can get the video format, quality and LINK
         findViewById(R.id.load_stream).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // 2 step : The idea is to get the url from previous step, download the stream according to the provided duration,
+        // cut it using FFMPEG lib and save it to phone dir
+        //
         downloadStreamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
