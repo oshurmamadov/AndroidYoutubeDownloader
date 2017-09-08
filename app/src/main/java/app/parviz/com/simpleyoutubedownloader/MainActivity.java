@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
     //4) Create intent which can receive and handle any video from YouTube
     //5) Play trimmed video
 
-    //FSJ BFD /Social year Germany
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,4 +1,8 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 25
@@ -20,6 +24,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -27,6 +32,29 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
     compile 'com.writingminds:FFmpegAndroid:0.3.2'
-    compile project(':data')
-    compile project(':domain')
+
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxandroid:1.2.1'
+
+    compile 'com.google.code.gson:gson:2.8.1'
+
+    compile 'com.jakewharton:butterknife:8.7.0'
+    compile 'com.google.dagger:dagger:2.5'
+
+    compile 'com.squareup.retrofit2:retrofit:2.0.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+
+    compile 'com.google.code.gson:gson:2.8.1'
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    apt 'com.jakewharton:butterknife-compiler:8.7.0'
+    kapt 'com.google.dagger:dagger-compiler:2.5'
+
+    provided 'javax.annotation:jsr250-api:1.0'
+    provided 'com.google.dagger:dagger-compiler:2.5'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+}
+repositories {
+    mavenCentral()
 }
