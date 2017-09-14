@@ -25,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/load_stream"
                 android:layout_toStartOf="@+id/load_stream"
-                android:text="cW-GsKSURdc"/>
+                android:text="LJsQZ6QNdmU"/>
 
             <Button
                 android:id="@+id/load_stream"

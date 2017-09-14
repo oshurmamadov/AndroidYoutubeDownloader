@@ -37,7 +37,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
-    private  String STREAM_URL = "";
+    private  String STREAM_URL = "LJsQZ6QNdmU";
     private static final String VIDEO_INFO_URL = "http://www.youtube.com/get_video_info?video_id=";
 
     private boolean unicodedStreamLoaded = false;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        STREAM_URL = addressBox.getText().toString();
+        //STREAM_URL = addressBox.getText().toString();
 
         loadBinaryFFMPEG(getApplicationContext());
     }
@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             fillSpinnerData(formedResult);
-
 
             progressWrapper.setVisibility(View.GONE);
         }

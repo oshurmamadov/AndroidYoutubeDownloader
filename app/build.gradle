@@ -21,6 +21,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions{
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
@@ -43,10 +48,13 @@ dependencies {
 
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     compile 'com.google.code.gson:gson:2.8.1'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    compile 'com.github.gturedi:stateful-layout:1.2.1'
 
     apt 'com.jakewharton:butterknife-compiler:8.7.0'
     kapt 'com.google.dagger:dagger-compiler:2.5'
@@ -54,6 +62,10 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     provided 'com.google.dagger:dagger-compiler:2.5'
     provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    implementation project(':data')
+    implementation project(':domain')
+
 }
 repositories {
     mavenCentral()
