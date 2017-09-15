@@ -1,13 +1,11 @@
 package app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter
 
-import android.util.Log
-import app.parviz.com.simpleyoutubedownloader.common.base.BasePresenter
 import app.parviz.com.simpleyoutubedownloader.common.VIDEO_SIMPLE
+import app.parviz.com.simpleyoutubedownloader.common.base.BasePresenter
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoView
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoInfoViewModel
 import com.oshurmamadov.domain.interactor.LoadVideoInfoInterActor
 import com.oshurmamadov.domain.model.VideoInfoDomainModel
-import io.reactivex.observers.DisposableSingleObserver
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
@@ -35,6 +33,9 @@ class LoadVideoInfoPresenter(private var interActor : LoadVideoInfoInterActor) :
 
     private fun proceedWithResult(value : VideoInfoDomainModel) {
         view.hideLoad()
-        view.loadVideoInfo(LoadVideoInfoViewModel(value.videoLink, value.videoFormat, value.videoQuality))
+        if (value.empty)
+            view.onError()
+        else
+            view.loadVideoInfo(LoadVideoInfoViewModel(value.videoLink, value.videoFormat, value.videoQuality))
     }
 }
