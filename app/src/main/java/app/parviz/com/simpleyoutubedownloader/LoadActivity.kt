@@ -1,12 +1,21 @@
 package app.parviz.com.simpleyoutubedownloader
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import app.parviz.com.simpleyoutubedownloader.common.App
+import app.parviz.com.simpleyoutubedownloader.common.VIDEO_SIMPLE
 import app.parviz.com.simpleyoutubedownloader.common.base.BaseActivity
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter.LoadVideoInfoPresenter
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoView
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoInfoViewModel
+import com.oshurmamadov.data.common.VIDEO_INFO_URL
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
+import java.io.BufferedInputStream
+import java.net.URL
 import javax.inject.Inject
 
 class LoadActivity : BaseActivity(), LoadVideoInfoView  {
@@ -20,7 +29,9 @@ class LoadActivity : BaseActivity(), LoadVideoInfoView  {
         initDiGraph()
         initPresenter()
 
-        getVideoInfo()
+        findViewById(R.id.load_stream).setOnClickListener {
+            getVideoInfo()
+        }
     }
 
     override fun onLoad() {

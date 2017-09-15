@@ -24,5 +24,6 @@ open class OldFashionDownloader {
             e.printStackTrace()
         }
         return builder
+        //str = bufferedInputStream.bufferedReader().use { it.readText() }
     }
 }

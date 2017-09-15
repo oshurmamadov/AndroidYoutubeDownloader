@@ -7,5 +7,5 @@ import io.reactivex.Single
  * Created by Parviz_Oshurmamadov on 9/11/2017.
  */
 interface LoadVideoInfoRepository {
-    fun loadVideoInfo(url: String) : Single<VideoInfoDomainModel>
+    fun loadVideoInfo(url: String) : VideoInfoDomainModel
 }

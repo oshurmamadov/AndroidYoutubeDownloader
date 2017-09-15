@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         BufferedInputStream bufferedInputStream = null;
         String result = "";
         try {
-            System.setProperty("http.keepAlive", "false");
+         //   System.setProperty("http.keepAlive", "false");
 
             URL url = new URL(VIDEO_INFO_URL + STREAM_URL);
 

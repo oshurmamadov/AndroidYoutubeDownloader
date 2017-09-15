@@ -9,7 +9,7 @@ import java.util.ArrayList
 /**
  * Created by Parviz_Oshurmamadov on 9/11/2017.
  */
-data class VideoInfo(private var info : StringBuilder = StringBuilder()){
+data class VideoInfo(private var info : String = ""){
     private val TYPE_KEY = "type="
     private val QUALITY_KEY = "quality="
 
@@ -20,7 +20,7 @@ data class VideoInfo(private var info : StringBuilder = StringBuilder()){
         return createDomainModel(decodedStreanMapUrl)
     }
 
-    private fun extractEncodedStreamMapUrl(strBuilder: StringBuilder) : String {
+    private fun extractEncodedStreamMapUrl(strBuilder: String) : String {
         val stringArray1 = strBuilder.split("&")
         val stringRes =  stringArray1.find { str: String -> str.contains(URL_ENCODED_FMT_STREAM_MAP_KEY) }
         for (item in stringArray1) {

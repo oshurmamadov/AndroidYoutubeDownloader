@@ -8,6 +8,9 @@ import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoI
 import com.oshurmamadov.domain.interactor.LoadVideoInfoInterActor
 import com.oshurmamadov.domain.model.VideoInfoDomainModel
 import io.reactivex.observers.DisposableSingleObserver
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.async
+import org.jetbrains.anko.coroutines.experimental.bg
 
 /**
  * Created by Parviz_Oshurmamadov on 9/6/2017.
@@ -24,20 +27,14 @@ class LoadVideoInfoPresenter(private var interActor : LoadVideoInfoInterActor) :
         view.onLoad()
 
         interActor.setUrl(VIDEO_SIMPLE)
-        interActor.subscribe(VideoInfoObserver(view))
+        async(UI) {
+            val value = bg { interActor.buildInterActor() }
+            proceedWithResult(value.await())
+        }
     }
 
-    private class VideoInfoObserver(private var view: LoadVideoInfoView)
-        : DisposableSingleObserver<VideoInfoDomainModel>() {
-
-        override fun onSuccess(value: VideoInfoDomainModel) {
-            view.hideLoad()
-            view.loadVideoInfo(LoadVideoInfoViewModel(value.videoLink, value.videoFormat, value.videoQuality))
-        }
-
-        override fun onError(e: Throwable?) {
-            Log.e("LoadVideoInfoPresenter", "shit happens")
-            view.onError()
-        }
+    private fun proceedWithResult(value : VideoInfoDomainModel) {
+        view.hideLoad()
+        view.loadVideoInfo(LoadVideoInfoViewModel(value.videoLink, value.videoFormat, value.videoQuality))
     }
 }

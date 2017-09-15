@@ -40,8 +40,8 @@ class AppModule(private val context: Context) {
     }
 
     @Provides
-    fun provideLoadVideoInfoInterActor(repository: LoadVideoInfoRepository, threadScheduler: ThreadScheduler ) : LoadVideoInfoInterActor {
-        return LoadVideoInfoInterActor(repository, threadScheduler)
+    fun provideLoadVideoInfoInterActor(repository: LoadVideoInfoRepository) : LoadVideoInfoInterActor {
+        return LoadVideoInfoInterActor(repository)
     }
 
     @Provides
