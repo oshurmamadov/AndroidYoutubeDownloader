@@ -1,9 +1,9 @@
 package com.oshurmamadov.domain.model
 
 /**
- * Created by Parviz_Oshurmamadov on 9/11/2017.
+ * Load video info domain model
  */
 data class VideoInfoDomainModel(var empty: Boolean,
-                                var videoLink: String,
-                                var videoFormat: String,
-                                var videoQuality: String)
+                                var videoLink: List<String?>,
+                                var videoFormat: List<String?>,
+                                var videoQuality: List<String?>)

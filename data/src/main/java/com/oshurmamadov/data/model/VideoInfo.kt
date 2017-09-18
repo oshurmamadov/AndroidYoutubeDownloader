@@ -1,16 +1,17 @@
 package com.oshurmamadov.data.model
 
 import com.oshurmamadov.data.common.URL_ENCODED_FMT_STREAM_MAP_KEY
+import com.oshurmamadov.data.common.decodeUriComponent
 import com.oshurmamadov.domain.model.VideoInfoDomainModel
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
-import java.util.ArrayList
 
 /**
- * Created by Parviz_Oshurmamadov on 9/11/2017.
+ * Low level model responsible for decoding incoming stream to {@Link VideoInfoDomainModel}
  */
 data class VideoInfo(private var info : String = ""){
     private val EMPTY = ""
+    private val URL_KEY = "url="
     private val TYPE_KEY = "type="
     private val QUALITY_KEY = "quality="
     private val ENCODING_FORMAT = "UTF-8"
@@ -47,7 +48,7 @@ data class VideoInfo(private var info : String = ""){
     }
 
     private fun createDomainModel(decodedMap: String) : VideoInfoDomainModel {
-        if (decodedMap.isEmpty()) return VideoInfoDomainModel(true, EMPTY, EMPTY, EMPTY)
+        if (decodedMap.isEmpty()) return VideoInfoDomainModel(true, mutableListOf(), mutableListOf(), mutableListOf())
 
         val rows = decodedMap.split(",")
         val formedRows = rows.map { str: String ->  str.split("&")}
@@ -57,25 +58,23 @@ data class VideoInfo(private var info : String = ""){
                     array.find { str: String ->
                         str.contains(TYPE_KEY)}
                             ?.split("=")?.get(1)
-                            ?.replace("%2F", "/")
-                            ?.replace("%3B", ";")
-                            ?.replace("%20", "\"")
+                            ?.decodeUriComponent(this::decodeURIComponent)
                             ?.split(";")?.get(0)
-                            ?.split("/")?.get(1)
-                }
+                            ?.split("/")?.get(1)}
 
         val mappedQuality =  formedRows
                 .map { array: List<String> ->
                     array.find { str: String ->
-                        str.contains(QUALITY_KEY)}?.split("=")?.get(1)
-                }
+                        str.contains(QUALITY_KEY)}
+                            ?.split("=")?.get(1)}
 
+        val mappedURL =  formedRows
+                .map { array: List<String> ->
+                    array.find { str: String ->
+                        str.contains(URL_KEY)}
+                            ?.split("=")?.get(1)
+                            ?.decodeUriComponent(this::decodeURIComponent) }
 
-
-
-        val mappedResult: List<String>? = null
-
-        return VideoInfoDomainModel(false, "jush","kutoq","kerm")
+        return VideoInfoDomainModel(false, mappedURL.toList(), mappedType.toList(), mappedQuality.toList())
     }
-
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 
 /**
- * Created by Parviz_Oshurmamadov on 9/6/2017.
+ * Load video info presenter
  */
 
 class LoadVideoInfoPresenter(private var interActor : LoadVideoInfoInterActor) : BasePresenter<LoadVideoInfoView> {
