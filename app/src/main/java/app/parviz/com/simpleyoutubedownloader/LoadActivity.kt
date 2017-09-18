@@ -1,26 +1,29 @@
 package app.parviz.com.simpleyoutubedownloader
 
-import android.os.AsyncTask
 import android.os.Bundle
+import android.support.v7.widget.AppCompatSpinner
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.LinearLayout
 import app.parviz.com.simpleyoutubedownloader.common.App
-import app.parviz.com.simpleyoutubedownloader.common.VIDEO_SIMPLE
 import app.parviz.com.simpleyoutubedownloader.common.base.BaseActivity
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter.LoadVideoInfoPresenter
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoView
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoInfoViewModel
-import com.oshurmamadov.data.common.VIDEO_INFO_URL
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.coroutines.experimental.bg
-import java.io.BufferedInputStream
-import java.net.URL
 import javax.inject.Inject
+import kotlinx.android.synthetic.main.activity_load.*
 
 class LoadActivity : BaseActivity(), LoadVideoInfoView  {
     @Inject
     lateinit var loadVideoInfoPresenter: LoadVideoInfoPresenter
+
+    private val loadVideoButton: Button by lazy { load_video }
+    private val loadStreamButton: Button by lazy { load_stream }
+    private val videoLoadWrapper: LinearLayout by lazy { video_load_wrapper }
+    private val videoQualitySpinner: AppCompatSpinner by lazy { video_quality_spinner }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,7 @@ class LoadActivity : BaseActivity(), LoadVideoInfoView  {
         initDiGraph()
         initPresenter()
 
-        findViewById(R.id.load_stream).setOnClickListener {
+        loadStreamButton.setOnClickListener {
             getVideoInfo()
         }
     }
@@ -46,6 +49,7 @@ class LoadActivity : BaseActivity(), LoadVideoInfoView  {
         Log.d("LoadActivity", "link : " + viewModel.videoLink)
         Log.d("LoadActivity", "format : " + viewModel.videoFormat)
         Log.d("LoadActivity", "quality : " + viewModel.videoQuality)
+        populateVideoQualitySpinner(viewModel)
     }
 
     override fun hideLoad() {
@@ -55,10 +59,22 @@ class LoadActivity : BaseActivity(), LoadVideoInfoView  {
     private fun initDiGraph() {
         App.graph.inject(this)
     }
+
     private fun initPresenter() {
         loadVideoInfoPresenter.setView(this)
     }
+
     private fun getVideoInfo() {
         loadVideoInfoPresenter.loadVideoInfo()
+    }
+
+    private fun populateVideoQualitySpinner(viewModel: LoadVideoInfoViewModel) {
+        videoLoadWrapper.visibility = View.VISIBLE
+
+        val adapter = ArrayAdapter<String>(applicationContext, android.R.layout.simple_spinner_item, viewModel.videoQuality)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        videoQualitySpinner.adapter = adapter
+
+        videoQualitySpinner.setSelection(viewModel.videoQuality.size - 1)
     }
 }

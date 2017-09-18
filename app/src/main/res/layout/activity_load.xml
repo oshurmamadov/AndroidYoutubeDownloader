@@ -10,67 +10,101 @@
         android:layout_height="match_parent"
         tools:context="app.parviz.com.simpleyoutubedownloader.LoadActivity">
 
-        <com.gturedi.views.StatefulLayout
-            android:id="@+id/stateful"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            app:stfAnimationEnabled="true"
-            app:stfInAnimation="@android:anim/slide_in_left"
-            app:stfOutAnimation="@android:anim/slide_out_right">
-            <RelativeLayout
-                android:id="@+id/activity_main"
+            android:layout_height="match_parent">
+
+            <com.gturedi.views.StatefulLayout
+                android:id="@+id/stateful"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <EditText
-                    android:id="@+id/address_box"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                app:stfAnimationEnabled="true"
+                app:stfInAnimation="@android:anim/slide_in_left"
+                app:stfOutAnimation="@android:anim/slide_out_right">
+                <RelativeLayout
+                    android:id="@+id/activity_main"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/load_stream"
-                    android:layout_toStartOf="@+id/load_stream"
-                    android:text="cW-GsKSURdc"/>
+                    android:layout_height="match_parent">
 
-                <Button
-                    android:id="@+id/load_stream"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LOAD"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="10dp"/>
+                    <EditText
+                        android:id="@+id/address_box"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@+id/load_stream"
+                        android:layout_toStartOf="@+id/load_stream"
+                        android:text="cW-GsKSURdc"/>
 
-                <Spinner
+                    <Button
+                        android:id="@+id/load_stream"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LOAD"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"/>
+
+                    <Spinner
+                        android:id="@+id/video_quality_spin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/load_stream"
+                        android:background="@android:color/holo_blue_light"
+                        android:popupBackground="@android:color/holo_green_dark"
+                        android:padding="10dp"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/download_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/video_quality_spin"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"/>
+
+                    <Button
+                        android:id="@+id/download_video_stream"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DOWNLOAD STREAM"
+                        android:layout_below="@id/download_url"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+            </com.gturedi.views.StatefulLayout>
+
+            <LinearLayout
+                android:id="@+id/video_load_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@+id/stateful"
+                android:visibility="gone"
+                android:gravity="center_vertical">
+                <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/video_quality_spinner"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/load_stream"
                     android:background="@android:color/holo_blue_light"
                     android:popupBackground="@android:color/holo_green_dark"
-                    android:padding="10dp"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/download_url"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/video_quality_spinner"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone"/>
-
+                    android:layout_weight="0.8"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:padding="5dp"/>
                 <Button
-                    android:id="@+id/download_video_stream"
-                    android:layout_width="match_parent"
+                    android:id="@+id/load_video"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="DOWNLOAD STREAM"
-                    android:layout_below="@id/download_url"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone"/>
+                    android:text="LOAD VIDEO"
+                    android:layout_marginRight="10dp"/>
 
-            </RelativeLayout>
-        </com.gturedi.views.StatefulLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+
 
     </android.support.v4.widget.NestedScrollView>
 
