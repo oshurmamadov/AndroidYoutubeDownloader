@@ -1,4 +1,4 @@
-package app.parviz.com.simpleyoutubedownloader.common
+package app.parviz.com.simpleyoutubedownloader.util
 
 import com.oshurmamadov.domain.multithreading.ThreadScheduler
 import io.reactivex.Scheduler

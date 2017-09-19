@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
-import app.parviz.com.simpleyoutubedownloader.common.App
 import app.parviz.com.simpleyoutubedownloader.common.base.BaseActivity
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter.LoadVideoInfoPresenter
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoView
@@ -24,6 +23,7 @@ class LoadActivity : BaseActivity(), LoadVideoInfoView  {
     private val videoLoadWrapper: LinearLayout by lazy { video_load_wrapper }
     private val videoQualitySpinner: AppCompatSpinner by lazy { video_quality_spinner }
 
+    private var mViewModel: LoadVideoInfoViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +50,7 @@ class LoadActivity : BaseActivity(), LoadVideoInfoView  {
         Log.d("LoadActivity", "format : " + viewModel.videoFormat)
         Log.d("LoadActivity", "quality : " + viewModel.videoQuality)
         populateVideoQualitySpinner(viewModel)
+        mViewModel = viewModel
     }
 
     override fun hideLoad() {

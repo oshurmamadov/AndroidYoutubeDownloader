@@ -75,6 +75,7 @@ open class VideoInfoDecoder(private var videoInfo: VideoInfo) {
                             ?.split("=")?.get(1)
                             ?.decodeUriComponent(this::decodeURIComponent) }
 
+         // TODO get real video content length
         return VideoInfoDomainModel(false, mappedURL.toList(), mappedType.toList(), mappedQuality.toList())
     }
 

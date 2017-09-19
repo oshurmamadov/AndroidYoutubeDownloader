@@ -9,7 +9,7 @@ import com.oshurmamadov.domain.repository.LoadVideoInfoRepository
 
 
 /**
- * Created by Parviz_Oshurmamadov on 9/11/2017.
+ * Data layer video info repository
  */
 class LoadVideoInfoDataRepository(private var apiManager: ApiManager): LoadVideoInfoRepository {
 

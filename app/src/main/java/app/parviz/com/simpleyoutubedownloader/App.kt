@@ -1,4 +1,4 @@
-package app.parviz.com.simpleyoutubedownloader.common
+package app.parviz.com.simpleyoutubedownloader
 
 import android.app.Application
 import app.parviz.com.simpleyoutubedownloader.di.AppComponent
