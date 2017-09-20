@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 int stepSize = length / videoLength;
 
                 int minRange = 0;
-                int maxRange = 4000 * stepSize; // in milleseconds
+                int maxRange = 4000 * stepSize; // in milliseconds
 
                 connection = null;
                 connection = (HttpURLConnection) (new URL(url)).openConnection();

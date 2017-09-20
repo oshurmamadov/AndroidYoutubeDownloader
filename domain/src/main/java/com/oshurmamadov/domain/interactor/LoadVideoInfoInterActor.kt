@@ -6,7 +6,7 @@ import com.oshurmamadov.domain.model.VideoInfoDomainModel
 import com.oshurmamadov.domain.repository.LoadVideoInfoRepository
 
 /**
- * Created by Parviz_Oshurmamadov on 9/11/2017.
+ * Load video info use case
  */
 class LoadVideoInfoInterActor(private val repository: LoadVideoInfoRepository) : BaseInterActor<VideoInfoDomainModel> {
 
@@ -18,7 +18,7 @@ class LoadVideoInfoInterActor(private val repository: LoadVideoInfoRepository) :
 
     override fun buildInterActor(): VideoInfoDomainModel {
         if (videoInfoUrl.isEmpty())
-            Log.e("LoadVideoInfoInterActor", "empty url")
+            throw IllegalStateException("LoadVideoInfoInterActor: empty url")
         return repository.loadVideoInfo(videoInfoUrl)
     }
 }

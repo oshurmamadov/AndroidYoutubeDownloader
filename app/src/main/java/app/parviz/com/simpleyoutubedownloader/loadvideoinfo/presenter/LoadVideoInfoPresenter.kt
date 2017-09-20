@@ -6,7 +6,6 @@ import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoVi
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoInfoViewModel
 import app.parviz.com.simpleyoutubedownloader.util.UIThreadCoroutine
 import com.oshurmamadov.domain.interactor.LoadVideoInfoInterActor
-import com.oshurmamadov.domain.model.VideoInfoDomainModel
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 
@@ -14,7 +13,7 @@ import org.jetbrains.anko.coroutines.experimental.bg
  * Load video info presenter
  */
 
-class LoadVideoInfoPresenter(private var interActor : LoadVideoInfoInterActor,
+class LoadVideoInfoPresenter(private var infoInterActor : LoadVideoInfoInterActor,
                              private var uiThreadCoroutine: UIThreadCoroutine) : BasePresenter<LoadVideoInfoView> {
     private lateinit var view: LoadVideoInfoView
 
@@ -25,19 +24,18 @@ class LoadVideoInfoPresenter(private var interActor : LoadVideoInfoInterActor,
     fun loadVideoInfo() {
         view.onLoad()
 
-        interActor.setUrl(VIDEO_SIMPLE)
-
+        infoInterActor.setUrl(VIDEO_SIMPLE)
         async(uiThreadCoroutine.getUICoroutine()) {
-            val value = bg { interActor.buildInterActor() }
-            proceedWithResult(value.await())
+            val value = bg { infoInterActor.buildInterActor() }.await()
+            if (value.empty)
+                proceedWithError()
+            else
+                view.loadVideoInfo(LoadVideoInfoViewModel(value.videoLink, value.videoFormat, value.videoQuality))
         }
     }
 
-    private fun proceedWithResult(value : VideoInfoDomainModel) {
+    private fun proceedWithError() {
         view.hideLoad()
-        if (value.empty)
-            view.onError()
-        else
-            view.loadVideoInfo(LoadVideoInfoViewModel(value.videoLink, value.videoFormat, value.videoQuality))
+        view.onError()
     }
 }

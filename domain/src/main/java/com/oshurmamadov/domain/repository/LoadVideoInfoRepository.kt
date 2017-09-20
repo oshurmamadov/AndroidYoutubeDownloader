@@ -4,7 +4,7 @@ import com.oshurmamadov.domain.model.VideoInfoDomainModel
 import io.reactivex.Single
 
 /**
- * Created by Parviz_Oshurmamadov on 9/11/2017.
+ * Domain layer load video info repository
  */
 interface LoadVideoInfoRepository {
     fun loadVideoInfo(url: String) : VideoInfoDomainModel

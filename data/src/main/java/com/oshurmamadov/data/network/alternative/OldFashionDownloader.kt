@@ -1,12 +1,12 @@
 package com.oshurmamadov.data.network.alternative
 
-import android.util.Log
 import com.oshurmamadov.data.common.VIDEO_INFO_URL
 import java.io.BufferedInputStream
+import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * Created by Parviz_Oshurmamadov on 9/14/2017.
+ * Java downloading standard tools
  */
 open class OldFashionDownloader {
 
@@ -25,5 +25,21 @@ open class OldFashionDownloader {
         }
         return builder
         //str = bufferedInputStream.bufferedReader().use { it.readText() }
+    }
+
+    open fun getVideoSize(url: String): Int {
+        var connection: HttpURLConnection? = null
+        try {
+            connection = URL(url).openConnection() as HttpURLConnection
+            connection.connect()
+
+            return connection.contentLength
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            if (connection != null)
+                connection.disconnect()
+        }
+        return 0
     }
 }
