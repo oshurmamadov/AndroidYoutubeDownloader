@@ -9,7 +9,7 @@ import com.oshurmamadov.domain.repository.LoadVideoPropertiesRepository
 /**
  * Load video duration (in milliseconds) and size repository
  */
-class LoadVideoPropertiesDataRepository : LoadVideoPropertiesRepository {
+class LoadVideoPropertiesDataRepository(mediaMetadataRetriever: MediaMetadataRetriever) : LoadVideoPropertiesRepository {
     override fun loadVideoDuration(videoUrl: String): VideoPropertiesDomainModel {
         return VideoPropertiesDomainModel(
                 MediaMetadataRetriever().getVideoDuration(videoUrl),

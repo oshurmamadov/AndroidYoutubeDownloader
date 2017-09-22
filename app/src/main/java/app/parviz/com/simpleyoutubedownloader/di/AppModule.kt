@@ -1,11 +1,14 @@
 package app.parviz.com.simpleyoutubedownloader.di
 
 import android.content.Context
+import android.media.MediaMetadataRetriever
 import app.parviz.com.simpleyoutubedownloader.downloadvideo.presenter.DownloadVideoPresenter
 import app.parviz.com.simpleyoutubedownloader.util.UIThreadScheduler
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter.LoadVideoInfoPresenter
+import app.parviz.com.simpleyoutubedownloader.util.OSEnvironmentProvider
 import app.parviz.com.simpleyoutubedownloader.util.UIThreadCoroutine
 import app.parviz.com.simpleyoutubedownloader.util.UIThreadCoroutineProvider
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.oshurmamadov.data.network.api.ApiManager
 import com.oshurmamadov.data.repository.DownloadVideoDataRepository
 import com.oshurmamadov.data.repository.LoadVideoPropertiesDataRepository
@@ -17,8 +20,10 @@ import com.oshurmamadov.domain.multithreading.ThreadScheduler
 import com.oshurmamadov.domain.repository.DownloadVideoRepository
 import com.oshurmamadov.domain.repository.LoadVideoPropertiesRepository
 import com.oshurmamadov.domain.repository.LoadVideoInfoRepository
+import com.oshurmamadov.domain.util.OSEnvironment
 import dagger.Module
 import dagger.Provides
+import java.io.File
 import javax.inject.Singleton
 
 /**
@@ -48,6 +53,21 @@ class AppModule(private val context: Context) {
         return UIThreadCoroutineProvider()
     }
 
+    @Provides
+    fun provideOSEnvironment(): OSEnvironment {
+        return OSEnvironmentProvider()
+    }
+
+    @Provides
+    fun getMediaMetadataRetriever(): MediaMetadataRetriever {
+        return MediaMetadataRetriever()
+    }
+
+    @Provides
+    fun getFFMPEG(context: Context): FFmpeg {
+        return FFmpeg.getInstance(context)
+    }
+
     //------------------------------ BEGIN of Repositories
     @Provides
     fun provideLoadVideoInfoRepository(apiManager: ApiManager): LoadVideoInfoRepository {
@@ -55,13 +75,13 @@ class AppModule(private val context: Context) {
     }
 
     @Provides
-    fun provideLoadVideoDurationRepository(): LoadVideoPropertiesRepository {
-        return LoadVideoPropertiesDataRepository()
+    fun provideLoadVideoDurationRepository(mediaMetadataRetriever: MediaMetadataRetriever): LoadVideoPropertiesRepository {
+        return LoadVideoPropertiesDataRepository(mediaMetadataRetriever)
     }
 
     @Provides
-    fun provideDownloadVideoRepository(): DownloadVideoRepository {
-        return DownloadVideoDataRepository()
+    fun provideDownloadVideoRepository(osEnvironment: OSEnvironment, ffMpeg: FFmpeg): DownloadVideoRepository {
+        return DownloadVideoDataRepository(osEnvironment, ffMpeg)
     }
 
     //------------------------------ BEGIN of InterActors aka UseCase
