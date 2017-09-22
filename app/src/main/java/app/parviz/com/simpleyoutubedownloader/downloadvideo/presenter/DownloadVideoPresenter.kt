@@ -22,7 +22,7 @@ class DownloadVideoPresenter(private var propertiesInterActor: LoadVideoProperti
         this.view = mView
     }
 
-    fun getVideo(videoUrl: String, videoName: String, trimmingBegin: String, trimmingEnd: String) {
+    fun downloadVideo(videoUrl: String, videoName: String, trimmingBegin: String, trimmingEnd: String) {
         view.onLoad()
         loadVideoSizeAndDuration(videoUrl, videoName, trimmingBegin, trimmingEnd)
     }
@@ -38,16 +38,22 @@ class DownloadVideoPresenter(private var propertiesInterActor: LoadVideoProperti
         }
     }
 
-    private fun proceedWithFinResult(videoUrl: String,
-                                     videoName: String,
-                                     trimmingBegin: String,
-                                     trimmingEnd: String,
+    private fun proceedWithFinResult(videoUrl: String, videoName: String, trimmingBegin: String, trimmingEnd: String,
                                      properties: VideoPropertiesDomainModel) {
         if (properties.size == 0 || properties.duration.isEmpty())
             proceedWithError()
         else {
             downloadInterActor.setUrl(videoUrl)
             downloadInterActor.setMainProperties(videoName, trimmingBegin, trimmingEnd, properties)
+            async(uiThreadCoroutine.getUICoroutine()) {
+                val domainModel = bg { downloadInterActor.buildInterActor() }.await()
+                if (domainModel.videoFilePath.isEmpty())
+                    proceedWithError()
+                else {
+                    view.hideLoad()
+                    view.playVideo(domainModel.videoFilePath)
+                }
+            }
         }
     }
 

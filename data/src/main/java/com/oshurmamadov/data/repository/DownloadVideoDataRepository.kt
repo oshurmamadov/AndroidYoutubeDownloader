@@ -27,8 +27,8 @@ class DownloadVideoDataRepository(private var osEnvironment: OSEnvironment, var 
 
         return if (loadingStatus) {
             val path = ffMpeg.trimVideo(
-                    convertToAppropriateTimeFormat(trimmingBegin),
-                    convertToAppropriateTimeFormat(trimmingEnd),
+                    "00:00:00.00",//convertToAppropriateTimeFormat(trimmingBegin),
+                    "00:00:02.00",//convertToAppropriateTimeFormat(trimmingEnd),
                     videoFile!!)
 
             videoFile.deleteOnExit()
