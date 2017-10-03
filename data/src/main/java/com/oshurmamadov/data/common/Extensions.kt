@@ -3,7 +3,9 @@ package com.oshurmamadov.data.common
 import android.media.MediaMetadataRetriever
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException
 import com.oshurmamadov.domain.util.OSEnvironment
 import okhttp3.ResponseBody
 import java.io.File
@@ -39,6 +41,24 @@ fun File.getOutputMediaFile(environment: OSEnvironment): File? {
     return File(mediaStorageDir.path + File.separator + this.path + DEFAULT_APP_VIDEO_FORMAT)
 }
 
+fun FFmpeg.basicInit() {
+    try {
+        this.loadBinary(object : LoadBinaryResponseHandler(){
+            override fun onSuccess() {
+                super.onSuccess()
+                System.out.println("FFMPEG init success")
+            }
+
+            override fun onFailure() {
+                super.onFailure()
+                System.out.println("FFMPEG init failure")
+            }
+        })
+    }catch (e : FFmpegNotSupportedException) {
+        e.printStackTrace()
+    }
+}
+
 fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File): String {
     var status = EMPTY
     val newVideoFilePath = videoFile.parent + File.separator + videoFile.name.replace(DEFAULT_APP_VIDEO_FORMAT, EMPTY) +
@@ -61,10 +81,12 @@ fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File
             override fun onProgress(message: String?) {}
 
             override fun onFailure(message: String?) {
+                System.out.println("FFMPEG trimming failure " + message)
                 status = EMPTY
             }
 
             override fun onSuccess(message: String?) {
+                System.out.println("FFMPEG trimming success")
                 status = newVideoFilePath
             }
 

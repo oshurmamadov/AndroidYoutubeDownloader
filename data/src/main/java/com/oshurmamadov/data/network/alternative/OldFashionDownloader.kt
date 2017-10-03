@@ -57,7 +57,6 @@ open class OldFashionDownloader {
 
         try {
             connection = URL(videoUrl).openConnection() as HttpURLConnection
-            connection.requestMethod = HTTP_REQUEST_HEAD
             connection.setRequestProperty(HTTP_REQUEST_RANGE, HTTP_REQUEST_BYTES + trimmingBegin + "-" + rangeEnding)
             connection.connect()
 
@@ -69,6 +68,8 @@ open class OldFashionDownloader {
             while (inputStream.read(data, 0, data.size) != -1) {
                 outputStream.write(data, 0, inputStream.read(data, 0, data.size))
             }
+
+            System.out.println("video stream loaded and has been written to file")
             downloadStates = true
         }catch (e: Exception){
             e.printStackTrace()

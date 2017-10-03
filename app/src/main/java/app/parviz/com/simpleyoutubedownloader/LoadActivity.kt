@@ -1,5 +1,6 @@
 package app.parviz.com.simpleyoutubedownloader
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.widget.AppCompatSpinner
 import android.util.Log
@@ -7,6 +8,8 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
+import app.parviz.com.simpleyoutubedownloader.common.READ_AND_WRITE_PERMISSION_REQUEST_CODE
 import app.parviz.com.simpleyoutubedownloader.common.base.BaseActivity
 import app.parviz.com.simpleyoutubedownloader.downloadvideo.presenter.DownloadVideoPresenter
 import app.parviz.com.simpleyoutubedownloader.downloadvideo.view.DownloadVideoView
@@ -31,11 +34,10 @@ class LoadActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_load)
 
+        requestPermissions(this)
+
         initDiGraph()
         initPresenters()
-
-        loadStreamButton.setOnClickListener { getVideoInfo() }
-        loadVideoButton.setOnClickListener { downloadVideo() }
     }
 
     private fun initDiGraph() {
@@ -47,12 +49,17 @@ class LoadActivity : BaseActivity() {
         downloadVideoPresenter.setView(DownloadVideoViewImpl())
     }
 
+    private fun initLoadingListeners() {
+        loadStreamButton.setOnClickListener { getVideoInfo() }
+        loadVideoButton.setOnClickListener { downloadVideo() }
+    }
+
     private fun getVideoInfo() {
         loadVideoInfoPresenter.loadVideoInfo()
     }
 
     private fun downloadVideo() {
-        downloadVideoPresenter.downloadVideo(mViewModel!!.videoLink[0]!!, "testName", "0", "2000")
+        downloadVideoPresenter.downloadVideo(mViewModel!!.videoLink[0]!!, "testName", "0", "5000")
     }
 
     private fun populateVideoQualitySpinner(viewModel: LoadVideoInfoViewModel) {
@@ -106,6 +113,18 @@ class LoadActivity : BaseActivity() {
 
         override fun playVideo(videoPath: String) {
             playVideo(videoPath)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            READ_AND_WRITE_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    initLoadingListeners()
+                else
+                    Toast.makeText(applicationContext, "Oh dear we can not proceed without this permissions ;( ", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

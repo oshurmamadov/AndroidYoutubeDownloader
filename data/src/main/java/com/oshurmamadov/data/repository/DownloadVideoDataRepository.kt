@@ -2,6 +2,7 @@ package com.oshurmamadov.data.repository
 
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.oshurmamadov.data.common.EMPTY
+import com.oshurmamadov.data.common.basicInit
 import com.oshurmamadov.data.common.getOutputMediaFile
 import com.oshurmamadov.data.common.trimVideo
 import com.oshurmamadov.data.network.alternative.OldFashionDownloader
@@ -26,9 +27,10 @@ class DownloadVideoDataRepository(private var osEnvironment: OSEnvironment, var 
                 .downloadVideoAndStoreIntoDir(videoUrl, properties.duration, properties.size, trimmingBegin, trimmingEnd, videoFile)
 
         return if (loadingStatus) {
+            ffMpeg.basicInit()
             val path = ffMpeg.trimVideo(
                     "00:00:00.00",//convertToAppropriateTimeFormat(trimmingBegin),
-                    "00:00:02.00",//convertToAppropriateTimeFormat(trimmingEnd),
+                    "00:00:01.00",//convertToAppropriateTimeFormat(trimmingEnd),
                     videoFile!!)
 
             videoFile.deleteOnExit()
