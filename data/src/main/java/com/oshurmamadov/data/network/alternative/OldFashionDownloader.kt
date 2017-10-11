@@ -65,8 +65,8 @@ open class OldFashionDownloader {
 
             //TODO determine whats is off: 0
             val data = ByteArray(videoSize)
-            while (inputStream.read(data, 0, data.size) != -1) {
-                outputStream.write(data, 0, inputStream.read(data, 0, data.size))
+            while (inputStream.read() != -1) {
+                outputStream.write(inputStream.read())
             }
 
             System.out.println("video stream loaded and has been written to file")

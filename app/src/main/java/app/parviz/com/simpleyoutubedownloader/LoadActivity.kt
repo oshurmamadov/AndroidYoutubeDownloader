@@ -34,7 +34,8 @@ class LoadActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_load)
 
-        requestPermissions(this)
+        if (!requestPermissions(this))
+            initLoadingListeners()
 
         initDiGraph()
         initPresenters()
@@ -59,7 +60,7 @@ class LoadActivity : BaseActivity() {
     }
 
     private fun downloadVideo() {
-        downloadVideoPresenter.downloadVideo(mViewModel!!.videoLink[0]!!, "testName", "0", "5000")
+        downloadVideoPresenter.downloadVideo(mViewModel!!.videoLink[0]!!, "testName", "0", "3000")
     }
 
     private fun populateVideoQualitySpinner(viewModel: LoadVideoInfoViewModel) {
@@ -123,6 +124,7 @@ class LoadActivity : BaseActivity() {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     initLoadingListeners()
                 else
+                    //TODO Add proper this kinda error handling mechanism
                     Toast.makeText(applicationContext, "Oh dear we can not proceed without this permissions ;( ", Toast.LENGTH_SHORT).show()
             }
         }
