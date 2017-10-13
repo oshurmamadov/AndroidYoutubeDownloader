@@ -78,6 +78,10 @@ class LoadActivity : BaseActivity() {
     }
 
     private inner class LoadVideoInfoViewImpl: LoadVideoInfoView {
+        override fun onError(message: String) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
         override fun onLoad() {
             Log.d("LoadActivity", "loading video info...")
         }
@@ -100,6 +104,10 @@ class LoadActivity : BaseActivity() {
     }
 
     private inner class DownloadVideoViewImpl: DownloadVideoView {
+        override fun onError(message: String) {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
         override fun hideLoad() {
             Log.d("LoadActivity", "hide video stream loading")
         }

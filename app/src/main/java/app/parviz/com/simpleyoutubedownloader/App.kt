@@ -6,7 +6,7 @@ import app.parviz.com.simpleyoutubedownloader.di.AppModule
 import app.parviz.com.simpleyoutubedownloader.di.DaggerAppComponent
 
 /**
- * Created by Parviz_Oshurmamadov on 9/5/2017.
+ * Top level Application object
  */
 
 class App: Application() {

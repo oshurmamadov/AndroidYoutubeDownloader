@@ -7,4 +7,5 @@ interface BaseStateView {
     fun onLoad()
     fun hideLoad()
     fun onError()
+    fun onError(message: String)
 }
