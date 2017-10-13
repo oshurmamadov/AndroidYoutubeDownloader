@@ -6,6 +6,7 @@ import app.parviz.com.simpleyoutubedownloader.util.UIThreadCoroutine
 import com.oshurmamadov.domain.interactor.DownloadVideoInterActor
 import com.oshurmamadov.domain.interactor.LoadVideoPropertiesInterActor
 import com.oshurmamadov.domain.model.VideoPropertiesDomainModel
+import com.oshurmamadov.domain.responsehandler.Status
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 
@@ -32,8 +33,15 @@ class DownloadVideoPresenter(private var propertiesInterActor: LoadVideoProperti
             proceedWithError()
         else {
             propertiesInterActor.setUrl(videoUrl)
+
             async(uiThreadCoroutine.getUICoroutine()) {
-                proceedWithFinResult(videoUrl, videoName, trimmingBegin, trimmingEnd, bg { propertiesInterActor.buildInterActor() }.await())
+                val value = bg { propertiesInterActor.buildInterActor() }.await()
+
+                when (value.status) {
+                    Status.ERROR -> proceedWithError(value.errorMessage)
+                    Status.SUCCESS -> proceedWithFinResult(videoUrl, videoName, trimmingBegin, trimmingEnd, value.value!!)
+                    Status.EXCEPTION -> proceedWithError()
+                }
             }
         }
     }
@@ -55,6 +63,12 @@ class DownloadVideoPresenter(private var propertiesInterActor: LoadVideoProperti
                 }
             }
         }
+    }
+
+    private fun proceedWithError(message: String?) {
+        if (message.isNullOrEmpty()) proceedWithError()
+        view.hideLoad()
+        view.onError()
     }
 
     private fun proceedWithError() {
