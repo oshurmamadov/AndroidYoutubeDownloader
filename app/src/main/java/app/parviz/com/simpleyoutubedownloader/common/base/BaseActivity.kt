@@ -14,13 +14,10 @@ import app.parviz.com.simpleyoutubedownloader.common.READ_AND_WRITE_PERMISSION_R
 abstract class BaseActivity : AppCompatActivity() {
 
     fun requestPermissions(activity: Activity): Boolean {
-        return if (ContextCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(activity,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        return if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(
-                    activity,
+            ActivityCompat.requestPermissions(activity,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
                     READ_AND_WRITE_PERMISSION_REQUEST_CODE)
             true

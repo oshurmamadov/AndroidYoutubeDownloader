@@ -16,8 +16,8 @@ import app.parviz.com.simpleyoutubedownloader.downloadvideo.view.DownloadVideoVi
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter.LoadVideoInfoPresenter
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoView
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoInfoViewModel
-import javax.inject.Inject
 import kotlinx.android.synthetic.main.activity_load.*
+import javax.inject.Inject
 
 class LoadActivity : BaseActivity() {
     @Inject lateinit var loadVideoInfoPresenter: LoadVideoInfoPresenter
@@ -39,6 +39,20 @@ class LoadActivity : BaseActivity() {
 
         initDiGraph()
         initPresenters()
+        initYoutubePlayer()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode) {
+            READ_AND_WRITE_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    initLoadingListeners()
+                else
+                //TODO Add proper this kinda error handling mechanism
+                    Toast.makeText(applicationContext, "Oh dear we can not proceed without this permissions ;( ", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initDiGraph() {
@@ -53,6 +67,10 @@ class LoadActivity : BaseActivity() {
     private fun initLoadingListeners() {
         loadStreamButton.setOnClickListener { getVideoInfo() }
         loadVideoButton.setOnClickListener { downloadVideo() }
+    }
+
+    private fun initYoutubePlayer() {
+        //youtubePlayerView.initialize(getString(R.string.you_tube_key), YouTubeFailureRecoveryActivityImpl())
     }
 
     private fun getVideoInfo() {
@@ -74,7 +92,6 @@ class LoadActivity : BaseActivity() {
     }
 
     private fun playVideo(videoPath: String) {
-
     }
 
     private inner class LoadVideoInfoViewImpl: LoadVideoInfoView {
@@ -122,19 +139,6 @@ class LoadActivity : BaseActivity() {
 
         override fun playVideo(videoPath: String) {
             playVideo(videoPath)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
-            READ_AND_WRITE_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    initLoadingListeners()
-                else
-                    //TODO Add proper this kinda error handling mechanism
-                    Toast.makeText(applicationContext, "Oh dear we can not proceed without this permissions ;( ", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 }
