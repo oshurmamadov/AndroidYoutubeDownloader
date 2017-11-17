@@ -16,10 +16,13 @@ import app.parviz.com.simpleyoutubedownloader.downloadvideo.view.DownloadVideoVi
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter.LoadVideoInfoPresenter
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoView
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoInfoViewModel
+import app.parviz.com.simpleyoutubedownloader.player.CustomYouTubePlayerFragment
+import app.parviz.com.simpleyoutubedownloader.player.CustomYoutubePlayerListener
 import kotlinx.android.synthetic.main.activity_load.*
 import javax.inject.Inject
 
 class LoadActivity : BaseActivity() {
+
     @Inject lateinit var loadVideoInfoPresenter: LoadVideoInfoPresenter
     @Inject lateinit var downloadVideoPresenter: DownloadVideoPresenter
 
@@ -28,6 +31,7 @@ class LoadActivity : BaseActivity() {
     private val videoLoadWrapper: LinearLayout by lazy { video_load_wrapper }
     private val videoQualitySpinner: AppCompatSpinner by lazy { video_quality_spinner }
 
+    private var customYoutubePlayerListener: CustomYoutubePlayerListener? = null
     private var mViewModel: LoadVideoInfoViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +59,10 @@ class LoadActivity : BaseActivity() {
         }
     }
 
+    fun setCustomYoutubePlayerListener(listener: CustomYoutubePlayerListener) {
+        this.customYoutubePlayerListener = listener
+    }
+
     private fun initDiGraph() {
         App.graph.inject(this)
     }
@@ -70,7 +78,7 @@ class LoadActivity : BaseActivity() {
     }
 
     private fun initYoutubePlayer() {
-        //youtubePlayerView.initialize(getString(R.string.you_tube_key), YouTubeFailureRecoveryActivityImpl())
+        supportFragmentManager.beginTransaction().add(R.id.player_container, CustomYouTubePlayerFragment()).commit()
     }
 
     private fun getVideoInfo() {
@@ -91,10 +99,13 @@ class LoadActivity : BaseActivity() {
         videoQualitySpinner.setSelection(viewModel.videoQuality.size - 1)
     }
 
-    private fun playVideo(videoPath: String) {
+    private fun initPlayerAndPlayVideo(videoPath: String) {
+        checkNotNull(customYoutubePlayerListener)
+        customYoutubePlayerListener!!.playVideo(videoPath)
     }
 
     private inner class LoadVideoInfoViewImpl: LoadVideoInfoView {
+
         override fun onError(message: String) {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
@@ -121,6 +132,7 @@ class LoadActivity : BaseActivity() {
     }
 
     private inner class DownloadVideoViewImpl: DownloadVideoView {
+
         override fun onError(message: String) {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
@@ -138,7 +150,7 @@ class LoadActivity : BaseActivity() {
         }
 
         override fun playVideo(videoPath: String) {
-            playVideo(videoPath)
+            initPlayerAndPlayVideo(videoPath)
         }
     }
 }

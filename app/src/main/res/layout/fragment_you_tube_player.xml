@@ -1,13 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="app.parviz.com.simpleyoutubedownloader.player.YouTubePlayerFragment">
+             tools:context="app.parviz.com.simpleyoutubedownloader.player.CustomYouTubePlayerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
+        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+        android:id="@+id/youtube_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_height="wrap_content"/>
 
-</FrameLayout>
+</LinearLayout>
