@@ -31,8 +31,8 @@ class LoadActivity : BaseActivity() {
     private val videoLoadWrapper: LinearLayout by lazy { video_load_wrapper }
     private val videoQualitySpinner: AppCompatSpinner by lazy { video_quality_spinner }
 
-    private var customYoutubePlayerListener: CustomYoutubePlayerListener? = null
     private var mViewModel: LoadVideoInfoViewModel? = null
+    private var customYoutubePlayerListener: CustomYoutubePlayerListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

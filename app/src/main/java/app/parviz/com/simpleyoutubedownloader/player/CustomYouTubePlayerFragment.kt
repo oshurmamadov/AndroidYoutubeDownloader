@@ -12,7 +12,6 @@ import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayer.OnInitializedListener
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
-import java.util.*
 
 /**
  * YouTube player fragment
@@ -43,6 +42,11 @@ class CustomYouTubePlayerFragment : Fragment() {
         player!!.play()
     }
 
+    private fun pauseVideoStream() {
+        checkNotNull(player)
+        player!!.pause()
+    }
+
     inner class OnInitializedListenerImpl : OnInitializedListener {
         override fun onInitializationSuccess(provider: YouTubePlayer.Provider?, mPlayer: YouTubePlayer, wasRestored: Boolean) {
             if (!wasRestored) {
@@ -61,8 +65,7 @@ class CustomYouTubePlayerFragment : Fragment() {
         }
 
         override fun stopVideo() {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            pauseVideoStream()
         }
-
     }
 }
