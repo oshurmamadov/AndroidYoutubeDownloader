@@ -18,6 +18,8 @@ import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.view.LoadVideoInfoVi
 import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoInfoViewModel
 import app.parviz.com.simpleyoutubedownloader.player.CustomYouTubePlayerFragment
 import app.parviz.com.simpleyoutubedownloader.player.CustomYoutubePlayerListener
+import cn.hikyson.godeye.core.GodEye
+import cn.hikyson.godeye.monitor.GodEyeMonitor
 import kotlinx.android.synthetic.main.activity_load.*
 import javax.inject.Inject
 
@@ -44,6 +46,13 @@ class LoadActivity : BaseActivity() {
         initDiGraph()
         initPresenters()
         initYoutubePlayer()
+
+        GodEyeMonitor.work(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        GodEyeMonitor.shutDown()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
