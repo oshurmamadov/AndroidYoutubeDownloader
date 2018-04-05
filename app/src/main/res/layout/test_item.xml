@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="item"
+            type="app.parviz.com.simpleyoutubedownloader.test.Item"/>
+    </data>
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/div"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/div"
+            android:textColor="@color/colorAccent"
+            android:padding="15dp"
+            android:text="@{item.name}"
+            tools:text="pash"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>
