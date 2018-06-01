@@ -20,6 +20,11 @@ public class TestListActivity extends AppCompatActivity {
     TextView help;
     TextView sort;
 
+    int count = 0;
+    int prevYPosition = 0;
+    int scrollDownValue = 0;
+
+    boolean doScroll = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +44,12 @@ public class TestListActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new MyAdapter(list));
 
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doScroll = true;
+            }
+        });
 
         scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -47,26 +58,64 @@ public class TestListActivity extends AppCompatActivity {
 
                 int helpHeight = help.getMeasuredHeight();
 
-                if (scrollY > oldScrollY) {
-                    Log.e("YOYO", "DOWN");
+                if (doScroll) {
 
-                    if (scrollY < helpHeight) {
-                        sort.setTranslationY((scrollY - oldScrollY) * (-1));
+                    if (scrollY > oldScrollY) { //down
+                        int step = scrollY - prevYPosition;
+//                        if (scrollDownValue + step < helpHeight) {
+//                            scrollDownValue += step;
+//                            sort.setTranslationY(step * (-1));
+//                        } else if (scrollDownValue <= helpHeight) {
+//                            int diff = helpHeight - scrollDownValue;
+//                            scrollDownValue += diff;
+//                            sort.setTranslationY(diff * (-1));
+//                        }
+                        sort.setTranslationY(count);
+                        count += 10;
+                    }
+
+                    if (scrollY < oldScrollY) {// down
+
                     }
                 }
-                if (scrollY < oldScrollY) {
-                    Log.e("YOYO", "UP");
 
-                    if (scrollY < helpHeight) {
-                        sort.setTranslationY(oldScrollY - scrollY);
-                    }
-                }
+//                if (scrollY > oldScrollY) { //down
+//                        help.setVisibility(View.GONE);
+//                    }
+//
+//                if (scrollY < oldScrollY) {// up
+//                    if (scrollY <= helpHeight && help.getVisibility() == View.GONE) {
+//                        help.setVisibility(View.VISIBLE);
+//                    }
+//                }
 
-                if (scrollY >= helpHeight) { // значить help внене поле зрения
-                    // set sorting top to parent and
-                } else {
-                    //
-                }
+//                if (scrollY > oldScrollY) {
+//                    Log.e("YOYO", "DOWN");
+//
+//                    if (scrollDownValue < helpHeight) {
+//                        Log.e("YOYO", scrollY + " : " + oldScrollY);
+//                        count++;
+//                        sort.setTranslationY((scrollY - prevYPosition) * (-1));
+//                    } else if (prevYPosition == 0) {
+//                        sort.setTranslationY(helpHeight);
+//                    }
+//                }
+//                if (scrollY < oldScrollY) {
+//                    Log.e("YOYO", "UP");
+//
+//                    if (scrollY < helpHeight) {
+//                        count = 0;
+//                        sort.setTranslationY(prevYPosition - scrollY);
+//                    }
+//                }
+
+//                if (scrollY >= helpHeight) { // значить help внене поле зрения
+//                    // set sorting top to parent and
+//                } else {
+//                    //
+//                }
+
+                prevYPosition = scrollY;
             }
         });
 
