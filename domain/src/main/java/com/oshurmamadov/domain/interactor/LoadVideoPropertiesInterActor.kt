@@ -16,9 +16,9 @@ class LoadVideoPropertiesInterActor(private val repository: LoadVideoPropertiesR
         videoUrl = url
     }
 
-    override fun buildInterActor(): ResponseHandler<VideoPropertiesDomainModel> {
-        if (videoUrl.isEmpty())
-            throw IllegalStateException("LoadVideoDuration: empty url")
+    override suspend fun buildInterActor(): ResponseHandler<VideoPropertiesDomainModel> {
+        if (videoUrl.isEmpty()) throw IllegalStateException("LoadVideoDuration: empty url")
+
         return repository.loadVideoDuration(videoUrl)
     }
 }

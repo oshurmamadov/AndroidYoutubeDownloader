@@ -25,7 +25,7 @@ class DownloadVideoInterActor(private var repository: DownloadVideoRepository): 
         videoSourceUrl = url
     }
 
-    override fun buildInterActor(): DownloadVideoDomainModel {
+    override suspend fun buildInterActor(): DownloadVideoDomainModel {
         return repository.downloadVideo(isEmpty(videoSourceUrl), isEmpty(videoName), isEmpty(trimmingBegin), isEmpty(trimmingEnd), properties)
     }
 

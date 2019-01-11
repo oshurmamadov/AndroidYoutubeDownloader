@@ -16,9 +16,8 @@ class LoadVideoInfoInterActor(private val repository: LoadVideoInfoRepository) :
         videoInfoUrl = url
     }
 
-    override fun buildInterActor(): ResponseHandler<VideoInfoDomainModel> {
-        if (videoInfoUrl.isEmpty())
-            throw IllegalStateException("LoadVideoInfoInterActor: empty url")
+    override suspend fun buildInterActor(): ResponseHandler<VideoInfoDomainModel> {
+        if (videoInfoUrl.isEmpty()) throw IllegalStateException("LoadVideoInfoInterActor: empty url")
         return repository.loadVideoInfo(videoInfoUrl)
     }
 }

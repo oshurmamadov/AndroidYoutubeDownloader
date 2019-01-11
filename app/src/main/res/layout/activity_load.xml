@@ -107,7 +107,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_below="@+id/video_load_wrapper"/>
+                android:layout_below="@+id/video_load_wrapper"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 

@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "app.parviz.com.simpleyoutubedownloader"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,57 +25,53 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/rxjava.properties'
     }
-
-    dataBinding {
-        enabled = true
-    }
 }
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:support-v4:26.1.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/YouTubeAndroidPlayerApi.jar')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 
-    compile 'com.android.support:appcompat-v7:26.1.0'
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    compile 'com.writingminds:FFmpegAndroid:0.3.2'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
 
-    compile 'io.reactivex:rxjava:1.1.6'
-    compile 'io.reactivex:rxandroid:1.2.1'
+    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
 
-    compile 'com.google.code.gson:gson:2.8.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
 
-    compile 'com.google.dagger:dagger:2.5'
+    implementation 'com.google.code.gson:gson:2.8.1'
+
+    implementation 'com.google.dagger:dagger:2.5'
     kapt 'com.google.dagger:dagger-compiler:2.5'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.5'
 
-    compile 'com.squareup.retrofit2:retrofit:2.0.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
-    compile 'com.google.code.gson:gson:2.8.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.0.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.0.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    implementation 'com.google.code.gson:gson:2.8.1'
 
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.github.gturedi:stateful-layout:1.2.1'
 
-    compile 'com.github.gturedi:stateful-layout:1.2.1'
-
-    provided 'javax.annotation:jsr250-api:1.0'
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     implementation project(':data')
     implementation project(':domain')
 
     implementation 'com.android.support:recyclerview-v7:26.1.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.0"
 }
 repositories {
     mavenCentral()
-}
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
+    google()
+    jcenter()
 }

@@ -11,5 +11,5 @@ import io.reactivex.schedulers.Schedulers
  */
 interface BaseInterActor<out T> {
     fun setUrl(url: String)
-    fun buildInterActor() : T
+    suspend fun buildInterActor() : T
 }

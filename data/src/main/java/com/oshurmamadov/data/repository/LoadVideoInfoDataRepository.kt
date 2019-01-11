@@ -34,6 +34,7 @@ class LoadVideoInfoDataRepository(private var apiManager: ApiManager): LoadVideo
             responseResult.status = Status.ERROR
             responseResult.errorMessage = CONNECTION_ERROR
         }
+        response.body().close()
         return responseResult
     }
 }

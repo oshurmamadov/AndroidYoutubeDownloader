@@ -7,8 +7,8 @@ import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.viewmodel.LoadVideoI
 import app.parviz.com.simpleyoutubedownloader.util.UIThreadCoroutine
 import com.oshurmamadov.domain.interactor.LoadVideoInfoInterActor
 import com.oshurmamadov.domain.responsehandler.Status
-import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.coroutines.experimental.bg
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Load video info presenter
@@ -27,8 +27,8 @@ class LoadVideoInfoPresenter(private var infoInterActor : LoadVideoInfoInterActo
 
         infoInterActor.setUrl(VIDEO_SIMPLE)
 
-        async(uiThreadCoroutine.getUICoroutine()) {
-            val value = bg { infoInterActor.buildInterActor() }.await()
+        uiThreadCoroutine.runOnUICoroutine {
+            val value = withContext(Dispatchers.IO) {infoInterActor.buildInterActor()}
 
             when (value.status) {
                 Status.EXCEPTION -> proceedWithError(value.errorMessage)

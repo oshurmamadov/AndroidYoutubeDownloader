@@ -7,8 +7,8 @@ import com.oshurmamadov.domain.interactor.DownloadVideoInterActor
 import com.oshurmamadov.domain.interactor.LoadVideoPropertiesInterActor
 import com.oshurmamadov.domain.model.VideoPropertiesDomainModel
 import com.oshurmamadov.domain.responsehandler.Status
-import kotlinx.coroutines.experimental.async
-import org.jetbrains.anko.coroutines.experimental.bg
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Download video presenter
@@ -34,8 +34,8 @@ class DownloadVideoPresenter(private var propertiesInterActor: LoadVideoProperti
         else {
             propertiesInterActor.setUrl(videoUrl)
 
-            async(uiThreadCoroutine.getUICoroutine()) {
-                val value = bg { propertiesInterActor.buildInterActor() }.await()
+            uiThreadCoroutine.runOnUICoroutine {
+                val value = withContext(Dispatchers.IO) {propertiesInterActor.buildInterActor()}
 
                 when (value.status) {
                     Status.ERROR -> proceedWithError(value.errorMessage)
@@ -53,8 +53,9 @@ class DownloadVideoPresenter(private var propertiesInterActor: LoadVideoProperti
         else {
             downloadInterActor.setUrl(videoUrl)
             downloadInterActor.setMainProperties(videoName, trimmingBegin, trimmingEnd, properties)
-            async(uiThreadCoroutine.getUICoroutine()) {
-                val domainModel = bg { downloadInterActor.buildInterActor() }.await()
+
+            uiThreadCoroutine.runOnUICoroutine {
+                val domainModel = withContext(Dispatchers.IO) {downloadInterActor.buildInterActor()}
                 if (domainModel.videoFilePath.isEmpty())
                     proceedWithError()
                 else {

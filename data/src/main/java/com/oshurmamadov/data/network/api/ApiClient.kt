@@ -7,21 +7,25 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 /**
  * Created by Parviz_Oshurmamadov on 9/11/2017.
  */
 class ApiClient {
-    private val retrofit: Retrofit = Retrofit
+    private val client = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build()
+    private val retrofit = Retrofit
             .Builder()
             .baseUrl(ROOT_URL)
-            .addConverterFactory(
-                    GsonConverterFactory.create(
-                            GsonBuilder().setLenient().create()))
-            .client(
-                    OkHttpClient.Builder().addInterceptor(
-                            HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)).build())
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
+            .client(OkHttpClient.Builder().addInterceptor(
+                    HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)).build())
             .build()
 
     private fun <T> createApiService(service: Class<T>) : T {

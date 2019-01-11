@@ -24,7 +24,7 @@ class DownloadVideoDataRepository(private var osEnvironment: OSEnvironment, var 
 
         val videoFile = File(videoName).getOutputMediaFile(osEnvironment)
         val loadingStatus = OldFashionDownloader()
-                .downloadVideoAndStoreIntoDir(videoUrl, properties.duration, properties.size, trimmingBegin, trimmingEnd, videoFile)
+                .downloadVideoAndStoreIntoFile(videoUrl, properties.duration, properties.size, trimmingBegin, trimmingEnd, videoFile)
 
         return if (loadingStatus) {
             ffMpeg.basicInit()

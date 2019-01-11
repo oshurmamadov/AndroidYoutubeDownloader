@@ -45,8 +45,8 @@ open class OldFashionDownloader {
         return 0
     }
 
-    open fun downloadVideoAndStoreIntoDir(videoUrl: String, videoDuration: String, videoSize: Int, trimmingBegin: String,
-                                          trimmingEnd: String, file: File?): Boolean {
+    open fun downloadVideoAndStoreIntoFile(videoUrl: String, videoDuration: String, videoSize: Int, trimmingBegin: String,
+                                           trimmingEnd: String, file: File?): Boolean {
         var downloadStates = false
         var connection: HttpURLConnection? = null
         var inputStream: BufferedInputStream? = null
