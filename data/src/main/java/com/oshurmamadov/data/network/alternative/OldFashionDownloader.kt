@@ -104,7 +104,7 @@ open class OldFashionDownloader {
 
                 connection = URL(videoUrl).openConnection() as HttpURLConnection
                 //connection.requestMethod = HTTP_REQUEST_HEAD
-                connection.setRequestProperty(HTTP_REQUEST_RANGE, "$HTTP_REQUEST_BYTES$trimmingBegin-$rangeEnding")
+                //connection.setRequestProperty(HTTP_REQUEST_RANGE, "$HTTP_REQUEST_BYTES$trimmingBegin-$rangeEnding")
                 connection.connect()
 
 

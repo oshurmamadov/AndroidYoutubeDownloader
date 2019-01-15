@@ -65,23 +65,24 @@ fun FFmpeg.basicInit() {
     }
 }
 
-fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File, mFormat: String): String {
+fun FFmpeg.trimVideo(start: String, end: String, videoFile: File, mFormat: String): String {
     var status = EMPTY
     val format = ".$mFormat"
     val newVideoFilePath = videoFile.parent + File.separator + videoFile.name.replace(format, EMPTY) +
             DEFAULT_VIDEO_NAME_SUFFIX + format
-    val cmd = arrayOf(
-            FFMPEG_CMD_SS,
-            trimmingBegin,
-            FFMPEG_CMD_I,
-            videoFile.absolutePath,
-            FFMPEG_CMD_TO,
-            trimmingEnd,
-            "-c",//FFMPEG_CMD_C,
-            FFMPEG_CMD_COPY,
-            newVideoFilePath)
+//    val cmd = arrayOf(
+//            FFMPEG_CMD_SS,
+//            start,
+//            FFMPEG_CMD_I,
+//            videoFile.absolutePath,
+//            FFMPEG_CMD_TO,
+//            end,
+//            "-c",//FFMPEG_CMD_C,
+//            FFMPEG_CMD_COPY,
+//            newVideoFilePath)
+    val cmd = arrayOf("-i", videoFile.absolutePath, "-ss", start, "-t", end, "-async", "1", newVideoFilePath)
   //  try {
-        this.execute(cmd, object : ExecuteBinaryResponseHandler() {
+        execute(cmd, object : ExecuteBinaryResponseHandler() {
 
             override fun onStart() {
                 System.out.println("FFMPEG trimming onStart")

@@ -85,7 +85,7 @@ class LoadActivity : BaseActivity() {
 
     private fun downloadVideo() {
         // TODO why trimming begin and end are NOT Integers, a ? gathat nakchugjo markab nakhuy, sgeyn bleat ?
-        downloadVideoPresenter.downloadVideo(globalVideoUrl, "testName", "0", "9000")
+        downloadVideoPresenter.downloadVideo(globalVideoUrl, "testName", "3000", "7000")
     }
 
     private fun populateVideoQualitySpinner(viewModel: LoadVideoInfoViewModel) {
