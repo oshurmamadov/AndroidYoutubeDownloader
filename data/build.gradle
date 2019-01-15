@@ -32,8 +32,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+    implementation 'nl.bravobit:android-ffmpeg:1.1.5'
 }
 

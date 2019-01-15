@@ -1,6 +1,5 @@
 package com.oshurmamadov.data.repository
 
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.oshurmamadov.data.common.EMPTY
 import com.oshurmamadov.data.common.basicInit
 import com.oshurmamadov.data.common.getOutputMediaFile
@@ -10,6 +9,7 @@ import com.oshurmamadov.domain.model.DownloadVideoDomainModel
 import com.oshurmamadov.domain.model.VideoPropertiesDomainModel
 import com.oshurmamadov.domain.repository.DownloadVideoRepository
 import com.oshurmamadov.domain.util.OSEnvironment
+import nl.bravobit.ffmpeg.FFmpeg
 import java.io.File
 
 /**
@@ -23,19 +23,23 @@ class DownloadVideoDataRepository(private var osEnvironment: OSEnvironment, var 
                                properties: VideoPropertiesDomainModel): DownloadVideoDomainModel {
 
         val videoFile = File(videoName).getOutputMediaFile(osEnvironment)
-        val loadingStatus = OldFashionDownloader()
-                .downloadVideoAndStoreIntoFile(videoUrl, properties.duration, properties.size, trimmingBegin, trimmingEnd, videoFile)
+//        val loadingStatus = OldFashionDownloader()
+//                .downloadVideoAndStoreIntoFile(videoUrl, properties.duration, properties.size, trimmingBegin, trimmingEnd, videoFile)
+
+        val loadingStatus = OldFashionDownloader().writeResponseBodyToDisk(
+                videoUrl, properties.duration, properties.size, videoFile, trimmingBegin, trimmingEnd)
 
         return if (loadingStatus) {
             ffMpeg.basicInit()
             val path = ffMpeg.trimVideo(
-                    "00:00:00.00",//convertToAppropriateTimeFormat(trimmingBegin),
-                    "00:00:01.00",//convertToAppropriateTimeFormat(trimmingEnd),
+                    "00:00:04.00",//convertToAppropriateTimeFormat(trimmingBegin),
+                    "00:00:08.00",//convertToAppropriateTimeFormat(trimmingEnd),
                     videoFile!!)
 
-            videoFile.deleteOnExit()
+            //videoFile.deleteOnExit()
 
-            DownloadVideoDomainModel(path)
+         //   DownloadVideoDomainModel(path)
+            DownloadVideoDomainModel("")
         } else
             DownloadVideoDomainModel(EMPTY)
     }

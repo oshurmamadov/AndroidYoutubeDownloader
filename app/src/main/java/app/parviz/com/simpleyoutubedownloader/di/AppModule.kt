@@ -8,7 +8,6 @@ import app.parviz.com.simpleyoutubedownloader.loadvideoinfo.presenter.LoadVideoI
 import app.parviz.com.simpleyoutubedownloader.util.OSEnvironmentProvider
 import app.parviz.com.simpleyoutubedownloader.util.UIThreadCoroutine
 import app.parviz.com.simpleyoutubedownloader.util.UIThreadCoroutineProvider
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.oshurmamadov.data.network.api.ApiManager
 import com.oshurmamadov.data.repository.DownloadVideoDataRepository
 import com.oshurmamadov.data.repository.LoadVideoPropertiesDataRepository
@@ -23,6 +22,7 @@ import com.oshurmamadov.domain.repository.LoadVideoInfoRepository
 import com.oshurmamadov.domain.util.OSEnvironment
 import dagger.Module
 import dagger.Provides
+import nl.bravobit.ffmpeg.FFmpeg
 import java.io.File
 import javax.inject.Singleton
 

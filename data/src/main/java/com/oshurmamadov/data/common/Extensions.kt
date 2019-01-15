@@ -1,12 +1,9 @@
 package com.oshurmamadov.data.common
 
 import android.media.MediaMetadataRetriever
-import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg
-import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException
 import com.oshurmamadov.domain.util.OSEnvironment
+import nl.bravobit.ffmpeg.ExecuteBinaryResponseHandler
+import nl.bravobit.ffmpeg.FFmpeg
 import okhttp3.ResponseBody
 import java.io.File
 
@@ -27,6 +24,7 @@ fun MediaMetadataRetriever.getVideoDuration(url: String): String {
     try {
         this.setDataSource(url, HashMap<String, String>())
         result = this.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        System.out.println("MediaMetadataRetriever video duration $result")
     }catch (e: Exception) {
         e.printStackTrace()
     }
@@ -43,18 +41,23 @@ fun File.getOutputMediaFile(environment: OSEnvironment): File? {
 
 fun FFmpeg.basicInit() {
     try {
-        this.loadBinary(object : LoadBinaryResponseHandler(){
-            override fun onSuccess() {
-                super.onSuccess()
-                System.out.println("FFMPEG init success")
-            }
+//        this.loadBinary(object : LoadBinaryResponseHandler(){
+//            override fun onSuccess() {
+//                super.onSuccess()
+//                System.out.println("FFMPEG init success")
+//            }
+//
+//            override fun onFailure() {
+//                super.onFailure()
+//                System.out.println("FFMPEG init failure")
+//            }
+//        })
+        if (isSupported)
+            System.out.println("FFMPEG init success")
+        else
+            System.out.println("FFMPEG init failure")
 
-            override fun onFailure() {
-                super.onFailure()
-                System.out.println("FFMPEG init failure")
-            }
-        })
-    }catch (e : FFmpegNotSupportedException) {
+    }catch (e : java.lang.Exception) {
         e.printStackTrace()
     }
 }
@@ -70,13 +73,15 @@ fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File
             videoFile.absolutePath,
             FFMPEG_CMD_TO,
             trimmingEnd,
-            FFMPEG_CMD_C,
+            "-c:v libvpx",//FFMPEG_CMD_C,
             FFMPEG_CMD_COPY,
             newVideoFilePath)
-    try {
+  //  try {
         this.execute(cmd, object : ExecuteBinaryResponseHandler() {
 
-            override fun onStart() {}
+            override fun onStart() {
+                System.out.println("FFMPEG trimming onStart")
+            }
 
             override fun onProgress(message: String?) {}
 
@@ -90,11 +95,13 @@ fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File
                 status = newVideoFilePath
             }
 
-            override fun onFinish() {}
+            override fun onFinish() {
+                System.out.println("FFMPEG trimming onFinish")
+            }
         })
-    } catch (e: FFmpegCommandAlreadyRunningException) {
-        e.printStackTrace()
-        status = EMPTY
-    }
+//    } catch (e: Exception) {
+//        e.printStackTrace()
+//        status = EMPTY
+//    }
     return status
 }
