@@ -22,19 +22,20 @@ class DownloadVideoDataRepository(private var osEnvironment: OSEnvironment, var 
                                trimmingEnd: String,
                                properties: VideoPropertiesDomainModel): DownloadVideoDomainModel {
 
-        val videoFile = File(videoName).getOutputMediaFile(osEnvironment)
+        val videoFile = File(videoName).getOutputMediaFile(osEnvironment, properties.format)
 //        val loadingStatus = OldFashionDownloader()
 //                .downloadVideoAndStoreIntoFile(videoUrl, properties.duration, properties.size, trimmingBegin, trimmingEnd, videoFile)
 
         val loadingStatus = OldFashionDownloader().writeResponseBodyToDisk(
-                videoUrl, properties.duration, properties.size, videoFile, trimmingBegin, trimmingEnd)
+                videoUrl, properties, properties.size, videoFile, trimmingBegin, trimmingEnd)
 
         return if (loadingStatus) {
             ffMpeg.basicInit()
             val path = ffMpeg.trimVideo(
                     "00:00:04.00",//convertToAppropriateTimeFormat(trimmingBegin),
                     "00:00:08.00",//convertToAppropriateTimeFormat(trimmingEnd),
-                    videoFile!!)
+                    videoFile!!,
+                    properties.format)
 
             //videoFile.deleteOnExit()
 

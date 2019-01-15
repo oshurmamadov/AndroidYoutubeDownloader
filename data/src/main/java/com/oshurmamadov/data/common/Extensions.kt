@@ -19,24 +19,27 @@ fun String.decodeUriComponent(decode: (url: String) -> String): String {
     return decode(this)
 }
 
-fun MediaMetadataRetriever.getVideoDuration(url: String): String {
-    var result = ""
+fun MediaMetadataRetriever.getVideoDuration(url: String): Pair<String, String> {
+    var result = Pair("", "") //TODO think about it
     try {
         this.setDataSource(url, HashMap<String, String>())
-        result = this.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-        System.out.println("MediaMetadataRetriever video duration $result")
+        val duration = this.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+        val mimeType = this.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE).split("/")[1] // TODO check for jush_null
+        System.out.println("MediaMetadataRetriever videoDuration: $duration  mimeType: $mimeType")
+
+        result = Pair(duration, mimeType)
     }catch (e: Exception) {
         e.printStackTrace()
     }
     return result
 }
 
-fun File.getOutputMediaFile(environment: OSEnvironment): File? {
+fun File.getOutputMediaFile(environment: OSEnvironment, format: String): File? {
     val mediaStorageDir = environment.getExternalStoragePublicDirectory()
     if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
             return null
     }
-    return File(mediaStorageDir.path + File.separator + this.path + DEFAULT_APP_VIDEO_FORMAT)
+    return File(mediaStorageDir.path + File.separator + this.path + "." + format)
 }
 
 fun FFmpeg.basicInit() {
@@ -62,10 +65,11 @@ fun FFmpeg.basicInit() {
     }
 }
 
-fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File): String {
+fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File, mFormat: String): String {
     var status = EMPTY
-    val newVideoFilePath = videoFile.parent + File.separator + videoFile.name.replace(DEFAULT_APP_VIDEO_FORMAT, EMPTY) +
-            DEFAULT_VIDEO_NAME_SUFFIX + DEFAULT_APP_VIDEO_FORMAT
+    val format = ".$mFormat"
+    val newVideoFilePath = videoFile.parent + File.separator + videoFile.name.replace(format, EMPTY) +
+            DEFAULT_VIDEO_NAME_SUFFIX + format
     val cmd = arrayOf(
             FFMPEG_CMD_SS,
             trimmingBegin,
@@ -73,7 +77,7 @@ fun FFmpeg.trimVideo(trimmingBegin: String, trimmingEnd: String, videoFile: File
             videoFile.absolutePath,
             FFMPEG_CMD_TO,
             trimmingEnd,
-            "-c:v libvpx",//FFMPEG_CMD_C,
+            "-c",//FFMPEG_CMD_C,
             FFMPEG_CMD_COPY,
             newVideoFilePath)
   //  try {

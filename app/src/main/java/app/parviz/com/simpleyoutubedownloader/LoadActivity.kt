@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.AppCompatSpinner
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import app.parviz.com.simpleyoutubedownloader.common.READ_AND_WRITE_PERMISSION_REQUEST_CODE
 import app.parviz.com.simpleyoutubedownloader.common.base.BaseActivity
 import app.parviz.com.simpleyoutubedownloader.downloadvideo.presenter.DownloadVideoPresenter
@@ -27,11 +24,12 @@ class LoadActivity : BaseActivity() {
     @Inject lateinit var downloadVideoPresenter: DownloadVideoPresenter
 
     private val loadVideoButton: Button by lazy { load_video }
-    private val loadStreamButton: Button by lazy { load_stream }
+    private val loadInfoButton: Button by lazy { load_info }
     private val videoLoadWrapper: LinearLayout by lazy { video_load_wrapper }
     private val videoQualitySpinner: AppCompatSpinner by lazy { video_quality_spinner }
 
-    private var mViewModel: LoadVideoInfoViewModel? = null
+    private var globalVideoUrl = ""
+    private lateinit var mViewModel: LoadVideoInfoViewModel
     private var customYoutubePlayerListener: CustomYoutubePlayerListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +42,6 @@ class LoadActivity : BaseActivity() {
         initDiGraph()
         initPresenters()
         initYoutubePlayer()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -77,7 +71,7 @@ class LoadActivity : BaseActivity() {
     }
 
     private fun initLoadingListeners() {
-        loadStreamButton.setOnClickListener { getVideoInfo() }
+        loadInfoButton.setOnClickListener { getVideoInfo() }
         loadVideoButton.setOnClickListener { downloadVideo() }
     }
 
@@ -91,7 +85,7 @@ class LoadActivity : BaseActivity() {
 
     private fun downloadVideo() {
         // TODO why trimming begin and end are NOT Integers, a ? gathat nakchugjo markab nakhuy, sgeyn bleat ?
-        downloadVideoPresenter.downloadVideo(mViewModel!!.videoLink[0]!!, "testName", "0", "9000")
+        downloadVideoPresenter.downloadVideo(globalVideoUrl, "testName", "0", "9000")
     }
 
     private fun populateVideoQualitySpinner(viewModel: LoadVideoInfoViewModel) {
@@ -102,6 +96,15 @@ class LoadActivity : BaseActivity() {
         videoQualitySpinner.adapter = adapter
 
         videoQualitySpinner.setSelection(viewModel.videoQuality.size - 1)
+
+        videoQualitySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
+                globalVideoUrl = mViewModel.videoLink[i]!!
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>) {
+            }
+        }
     }
 
     private fun initPlayerAndPlayVideo(videoPath: String) {

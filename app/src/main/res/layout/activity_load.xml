@@ -34,12 +34,12 @@
                         android:id="@+id/address_box"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_toLeftOf="@+id/load_stream"
-                        android:layout_toStartOf="@+id/load_stream"
+                        android:layout_toLeftOf="@+id/load_info"
+                        android:layout_toStartOf="@+id/load_info"
                         android:text="cW-GsKSURdc"/>
 
                     <Button
-                        android:id="@+id/load_stream"
+                        android:id="@+id/load_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -50,7 +50,7 @@
                         android:id="@+id/video_quality_spin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/load_stream"
+                        android:layout_below="@id/load_info"
                         android:background="@android:color/holo_blue_light"
                         android:popupBackground="@android:color/holo_green_dark"
                         android:padding="10dp"

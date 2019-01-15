@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         // 1 step : get provided youtube URL info and try to decode it loadStreamInfo()
         // The idea is to get video URL and sent it to VIDEO_INFO_URL retrieve the encoded row [url_encoded_fmt_stream_map]
         // and try to decode with URLDecoder[UTF format] , then format the string so we can get the video format, quality and LINK
-        findViewById(R.id.load_stream).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.load_info).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 unicodedStreamLoaded = false;

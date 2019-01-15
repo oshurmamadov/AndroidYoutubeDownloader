@@ -5,6 +5,7 @@ import com.oshurmamadov.data.common.HTTP_REQUEST_BYTES
 import com.oshurmamadov.data.common.HTTP_REQUEST_HEAD
 import com.oshurmamadov.data.common.HTTP_REQUEST_RANGE
 import com.oshurmamadov.data.common.VIDEO_INFO_URL
+import com.oshurmamadov.domain.model.VideoPropertiesDomainModel
 import java.io.*
 import java.net.HttpURLConnection
 import java.net.URL
@@ -83,7 +84,8 @@ open class OldFashionDownloader {
         return downloadStates
     }
 
-    open fun writeResponseBodyToDisk(videoUrl: String, videoDuration: String, videoSize: Int, file: File?,  trimmingBegin: String,
+    open fun writeResponseBodyToDisk(videoUrl: String, gProperties: VideoPropertiesDomainModel,
+                                     videoSize: Int, file: File?, trimmingBegin: String,
                                      trimmingEnd: String): Boolean {
         try {
 
@@ -92,7 +94,7 @@ open class OldFashionDownloader {
             var connection: HttpURLConnection? = null
 
             // multiplication of trimming end(in milliseconds) and step(videoSize / videoDuration)
-            val step = videoSize / videoDuration.toInt()
+            val step = videoSize / gProperties.duration.toInt()
             val rangeEnding = trimmingEnd.toInt() * step
 
             try {
